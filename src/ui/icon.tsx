@@ -24,12 +24,23 @@ const ICON_PATHS = {
   check: 'M5 12l5 5L20 7',
   upload: 'M12 16V4M7 9l5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4',
   download: 'M12 4v12M7 11l5 5 5-5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4',
+  print: 'M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z',
+  back: 'M15 6l-6 6 6 6',
+  doc: 'M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7',
+  done: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 12l3 3 5-6',
+  alert: 'M12 3l10 18H2zM12 10v5M12 18h.01',
+  undo: 'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3',
+  filter: 'M3 5h18l-7 8v6l-4-2v-4z',
+  sparkle: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z',
+  chev: 'M6 9l6 6 6-6',
+  pin: 'M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12zM12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+  cal: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;
 
 // Icons that point in a reading direction are mirrored in Arabic.
-const DIRECTIONAL_ICONS: ReadonlySet<IconName> = new Set(['logout']);
+const DIRECTIONAL_ICONS: ReadonlySet<IconName> = new Set(['logout', 'back', 'undo']);
 
 export function Icon({ name, size = 18, strokeWidth = 1.9 }: { name: IconName; size?: number; strokeWidth?: number }) {
   return (

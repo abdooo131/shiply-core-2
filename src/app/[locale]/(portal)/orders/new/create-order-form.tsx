@@ -111,10 +111,18 @@ function toInput(form: FormState): CreateOrderInput | null {
   };
 }
 
-export function CreateOrderForm({ products }: { products: Product[] }) {
+export function CreateOrderForm({
+  products,
+  initialType = 'deliver',
+  initialLinkedOrderNumber = '',
+}: {
+  products: Product[];
+  initialType?: OrderType;
+  initialLinkedOrderNumber?: string;
+}) {
   const t = useTranslations('createOrder');
   const locale = useLocale() as 'en' | 'ar';
-  const [form, setForm] = useState<FormState>(() => emptyForm('deliver'));
+  const [form, setForm] = useState<FormState>(() => ({ ...emptyForm(initialType), linkedOrderNumber: initialLinkedOrderNumber }));
   const [errors, setErrors] = useState<Partial<Record<keyof FormState | 'form', string>>>({});
   const [quote, setQuote] = useState<FeeQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
