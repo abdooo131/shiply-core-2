@@ -50,7 +50,7 @@ test('finds the area by Arabic spelling and creates each order type in Arabic', 
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
 
   for (const type of ['deliver', 'exchange', 'return', 'sign_and_return', 'cash_collection', 'pick_and_choose'] as const) {
-    await page.getByTestId(`type-${type}`).check({ force: true });
+    await page.getByTestId(`type-${type}`).check();
     await fillCustomer(page, AR, 'مدينه نصر', /مدينة نصر/);
     if (type === 'cash_collection') await page.getByLabel('المبلغ المطلوب تحصيله').fill('٥٠٠');
     if (type === 'pick_and_choose') {
