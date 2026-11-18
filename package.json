@@ -22,6 +22,8 @@
   "dependencies": {
     "@node-rs/argon2": "^2.2.2",
     "@prisma/client": "^6.19.3",
+    "bwip-js": "^4.11.4",
+    "exceljs": "^4.4.0",
     "next": "^15.5.29",
     "next-intl": "^4.15.1",
     "react": "^19.3.1",
@@ -40,6 +42,10 @@
     "vitest": "^3.2.7"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@prisma/client", "@prisma/engines", "prisma"]
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
+    ]
   }
 }

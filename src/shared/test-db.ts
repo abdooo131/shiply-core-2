@@ -7,8 +7,10 @@ const TEST_DATABASE_NAME = 'shiply_test';
 // Empties every table except reference data. Only ever runs on the test database.
 export async function resetTestDatabase(): Promise<void> {
   const [current] = await db.$queryRaw<{ name: string }[]>`SELECT current_database() AS name`;
-  if (current?.name !== TEST_DATABASE_NAME) {
-    throw new Error(`resetTestDatabase refused: connected to "${current?.name}", not ${TEST_DATABASE_NAME}`);
+  // shiply_test, or shiply_test_<name> when parallel workers each use their own copy.
+  const name = current?.name ?? '';
+  if (name !== TEST_DATABASE_NAME && !name.startsWith(`${TEST_DATABASE_NAME}_`)) {
+    throw new Error(`resetTestDatabase refused: connected to "${name}", not ${TEST_DATABASE_NAME}`);
   }
 
   const tables = await db.$queryRaw<{ tablename: string }[]>`
