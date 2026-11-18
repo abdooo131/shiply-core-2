@@ -29,7 +29,7 @@ export async function TopBar({ storeName, merchantNumber }: { storeName: string;
         <input className="input" type="search" placeholder={t('searchPlaceholder')} aria-label={t('searchPlaceholder')} disabled />
       </div>
       <div className="grow" />
-      <Link className="btn lime hide-sm" href="/orders">
+      <Link className="btn lime hide-sm" href="/orders/new">
         <Icon name="plus" size={16} strokeWidth={2.4} />
         {t('createOrder')}
       </Link>

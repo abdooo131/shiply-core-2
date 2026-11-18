@@ -13,7 +13,7 @@ for (const [label, width, height] of [['laptop', 1440, 900], ['phone', 375, 812]
     await page.getByTestId('password').fill(process.env.SEED_OWNER_PASSWORD ?? '');
     await page.getByTestId('sign-in').click();
     await page.waitForURL(/\/en$/);
-    for (const path of ['settings/pricing']) {
+    for (const path of ['orders/new']) {
       for (const locale of ['en', 'ar']) {
         for (const theme of ['light', 'dark']) {
           await page.goto(`/${locale}/${path}`);

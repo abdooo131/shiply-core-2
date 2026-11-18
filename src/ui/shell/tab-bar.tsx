@@ -31,7 +31,7 @@ export function TabBar() {
     <>
       <nav className="tabbar" aria-label={t('mainNavigation')}>
         {tabs.slice(0, 2).map(renderTab)}
-        <Link href="/orders" aria-label={t('createOrder')}>
+        <Link href="/orders/new" aria-label={t('createOrder')}>
           <span className="fab">
             <Icon name="plus" size={22} strokeWidth={2.6} />
           </span>

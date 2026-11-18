@@ -59,6 +59,16 @@ function moneyFields(type: OrderType, amountPiasters: number, cashDirection?: Ca
   return { codAmountPiasters: amountPiasters, refundPiasters: 0, cashDirection: cashDirection ?? null };
 }
 
+// The single place that turns an order's input into what pricing needs, so the
+// Create order preview and the stored order can never disagree.
+export function pricingFor(input: Pick<CreateOrderInput, 'type' | 'size' | 'codAmountPiasters' | 'cashDirection' | 'allowOpenPackage' | 'insuredValuePiasters'>) {
+  const size: PackageSize = PARCEL_FREE_TYPES.has(input.type) ? 'small' : input.size;
+  const allowOpenPackage = input.type === 'pick_and_choose' || (!NO_OPEN_PACKAGE_TYPES.has(input.type) && input.allowOpenPackage);
+  const money = moneyFields(input.type, input.codAmountPiasters, input.cashDirection);
+  const insuredValuePiasters = input.type === 'cash_collection' ? 0 : input.insuredValuePiasters;
+  return { size, allowOpenPackage, money, insuredValuePiasters };
+}
+
 async function uniqueOrderNumber(tx: Prisma.TransactionClient): Promise<string> {
   for (let attempt = 0; attempt < MAX_ORDER_NUMBER_TRIES; attempt += 1) {
     const number = generateOrderNumber();
@@ -78,10 +88,7 @@ export async function createOrder(
   if (!parsed.success) throw new AppError('invalid_input');
   const input = parsed.data;
   const customerMobile = normalizeEgyptianMobile(input.customerMobile);
-  const size: PackageSize = PARCEL_FREE_TYPES.has(input.type) ? 'small' : input.size;
-  const allowOpenPackage = input.type === 'pick_and_choose' || (!NO_OPEN_PACKAGE_TYPES.has(input.type) && input.allowOpenPackage);
-  const money = moneyFields(input.type, input.codAmountPiasters, input.cashDirection);
-  const insuredValuePiasters = input.type === 'cash_collection' ? 0 : input.insuredValuePiasters;
+  const { size, allowOpenPackage, money, insuredValuePiasters } = pricingFor(input);
 
   const fees = await quoteOrderFees({
     merchantId,
