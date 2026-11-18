@@ -108,3 +108,5 @@ These came from the owner's earlier locked decisions and are kept unless the own
 | 18 Nov 2026 | Shiply next-day only. Shiply Now stays separate. |
 | 18 Nov 2026 | Its own git repository, separate from `IA`. |
 | 18 Nov 2026 | This page is the fixed reference for the end goal. |
+| 18 Nov 2026 | First version: one Next.js app with PostgreSQL and PostGIS (design doc in docs/superpowers/specs). |
+| 18 Nov 2026 | VAT 14% on top of fees; return fee 50% of shipping; no cash-out fee for bank transfers; sample prices until the real price list. |
