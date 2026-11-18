@@ -692,3 +692,55 @@ model CashOut {
   @@index([merchantId, status])
   @@index([status, scheduledDate])
 }
+
+// ---------- Support ----------
+
+enum SupportTopic {
+  order
+  pickup
+  payment
+  account
+  other
+}
+
+enum SupportTicketStatus {
+  open
+  answered
+  closed
+}
+
+enum SupportAuthorKind {
+  merchant
+  staff
+}
+
+model SupportTicket {
+  id          String              @id @default(uuid()) @db.Uuid
+  number      String              @unique
+  merchantId  String              @db.Uuid
+  createdBy   String              @db.Uuid
+  topic       SupportTopic
+  orderNumber String?
+  subject     String
+  status      SupportTicketStatus @default(open)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  messages SupportMessage[]
+
+  @@index([merchantId, status, updatedAt])
+  @@index([status, updatedAt])
+}
+
+model SupportMessage {
+  id           String            @id @default(uuid()) @db.Uuid
+  ticketId     String            @db.Uuid
+  authorUserId String            @db.Uuid
+  authorKind   SupportAuthorKind
+  body         String
+  createdAt    DateTime          @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id])
+
+  @@index([ticketId, createdAt])
+}
