@@ -20,6 +20,17 @@ describe('seed', () => {
     expect(await db.user.count()).toBe(2);
   });
 
+  it('loads six pricing zones and at least one area in every governorate, once', async () => {
+    const areasBefore = await db.area.count();
+    runSeed();
+    expect(await db.area.count()).toBe(areasBefore);
+    expect(await db.pricingZone.count()).toBe(6);
+    const governoratesWithAreas = await db.area.groupBy({ by: ['governorateCode'] });
+    expect(governoratesWithAreas).toHaveLength(27);
+    expect(await db.area.count({ where: { governorateCode: 'C' } })).toBeGreaterThan(40);
+    expect(await db.area.count({ where: { governorateCode: 'GZ' } })).toBeGreaterThan(25);
+  });
+
   it('refuses to run in production', () => {
     expect(() => runSeed({ NODE_ENV: 'production' })).toThrow();
   });

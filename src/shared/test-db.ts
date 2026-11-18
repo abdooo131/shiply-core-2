@@ -1,7 +1,7 @@
 import { db } from './db';
 
 // Reference data that the seed loads once and tests rely on.
-const KEPT_TABLES = new Set(['_prisma_migrations', 'Governorate', 'spatial_ref_sys']);
+const KEPT_TABLES = new Set(['_prisma_migrations', 'Governorate', 'PricingZone', 'Area', 'spatial_ref_sys']);
 const TEST_DATABASE_NAME = 'shiply_test';
 
 // Empties every table except reference data. Only ever runs on the test database.

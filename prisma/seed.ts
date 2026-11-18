@@ -3,7 +3,13 @@
 import prismaClientPackage from '@prisma/client';
 import argon2Package from '@node-rs/argon2';
 
+import { areaSearchKey } from '../src/location/arabic-search-normalization.ts';
+import { AREAS, GOVERNORATE_ZONE, PRICING_ZONES } from './seed-data/places.ts';
+
 const { PrismaClient } = prismaClientPackage;
+
+// The seed writes a few hundred reference rows and hashes two passwords in one transaction.
+const SEED_TRANSACTION_TIMEOUT_MS = 60_000;
 const { hash } = argon2Package;
 
 // The 27 governorates of Egypt, keyed by their ISO 3166-2:EG code.
@@ -45,6 +51,26 @@ function requireEnv(name: string): string {
   return value;
 }
 
+type SeedTransaction = Parameters<Parameters<InstanceType<typeof PrismaClient>['$transaction']>[0]>[0];
+
+// Pricing zones and areas; adds missing rows only, so edits in places.ts are safe to re-run.
+async function seedPlaces(tx: SeedTransaction): Promise<void> {
+  for (const [sortOrder, zone] of PRICING_ZONES.entries()) {
+    await tx.pricingZone.upsert({ where: { code: zone.code }, create: { ...zone, sortOrder }, update: {} });
+  }
+  const governorateNames = new Map(GOVERNORATES.map(([code, nameEn, nameAr]) => [code, { nameEn, nameAr }]));
+  for (const area of AREAS) {
+    const governorate = governorateNames.get(area.governorateCode);
+    const zoneCode = GOVERNORATE_ZONE[area.governorateCode];
+    if (!governorate || !zoneCode) throw new Error(`Area ${area.nameEn} has an unknown governorate ${area.governorateCode}.`);
+    await tx.area.upsert({
+      where: { governorateCode_nameEn: { governorateCode: area.governorateCode, nameEn: area.nameEn } },
+      create: { ...area, zoneCode, searchKey: areaSearchKey(area.nameEn, area.nameAr, governorate) },
+      update: {},
+    });
+  }
+}
+
 async function main(): Promise<void> {
   if (process.env.NODE_ENV === 'production') {
     throw new Error('Seed refused: NODE_ENV is production. The seed is for local and test databases only.');
@@ -60,6 +86,7 @@ async function main(): Promise<void> {
       for (const [code, nameEn, nameAr] of GOVERNORATES) {
         await tx.governorate.upsert({ where: { code }, create: { code, nameEn, nameAr }, update: {} });
       }
+      await seedPlaces(tx);
 
       const owner =
         (await tx.user.findUnique({ where: { email: ownerEmail } })) ??
@@ -88,7 +115,7 @@ async function main(): Promise<void> {
         create: { userId: staff.id, role: 'admin' },
         update: {},
       });
-    });
+    }, { timeout: SEED_TRANSACTION_TIMEOUT_MS });
     console.warn('Seed done.');
   } finally {
     await db.$disconnect();

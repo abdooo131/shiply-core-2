@@ -150,15 +150,16 @@ model PickupLocation {
   merchantId  String   @db.Uuid
   label       String
   addressText String
-  // Linked to the areas table in Plan 2 (places and prices).
   areaId      String?  @db.Uuid
   isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   merchant Merchant @relation(fields: [merchantId], references: [id])
+  area     Area?    @relation(fields: [areaId], references: [id])
 
   @@index([merchantId])
+  @@index([areaId])
 }
 
 model BankAccount {
@@ -185,6 +186,39 @@ model Governorate {
   code   String @id
   nameEn String
   nameAr String
+
+  areas Area[]
+}
+
+// A pricing zone decides only the price (Cairo and Giza are one zone).
+// Operations always work by Area, never by pricing zone.
+model PricingZone {
+  code      String @id
+  nameEn    String
+  nameAr    String
+  sortOrder Int
+
+  areas Area[]
+}
+
+// A district or city: the unit operations sort, route and report by.
+model Area {
+  id              String   @id @default(uuid()) @db.Uuid
+  governorateCode String
+  zoneCode        String
+  nameEn          String
+  nameAr          String
+  // Normalized Arabic and English names for search (see normalizeForSearch).
+  searchKey       String
+  isServed        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  governorate     Governorate      @relation(fields: [governorateCode], references: [code])
+  zone            PricingZone      @relation(fields: [zoneCode], references: [code])
+  pickupLocations PickupLocation[]
+
+  @@unique([governorateCode, nameEn])
+  @@index([zoneCode])
 }
 
 // ---------- Platform ----------
