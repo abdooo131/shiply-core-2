@@ -1,0 +1,13 @@
+// Shiply Core database. Money columns are integers in piastres and end in "Piasters".
+// Times are stored in UTC.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}

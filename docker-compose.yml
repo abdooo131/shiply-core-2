@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    platform: linux/amd64
+    environment:
+      POSTGRES_USER: shiply
+      POSTGRES_PASSWORD: shiply_local_only
+      POSTGRES_DB: shiply
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - shiply-db:/var/lib/postgresql/data
+      - ./docker/create-test-db.sql:/docker-entrypoint-initdb.d/20-create-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shiply -d shiply"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  shiply-db:
