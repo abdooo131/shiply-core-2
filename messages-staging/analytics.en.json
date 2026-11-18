@@ -1,0 +1,107 @@
+{
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "How your deliveries performed over the last {days} days",
+    "periodLabel": "Period",
+    "periods": {
+      "7": "Last 7 days",
+      "30": "Last 30 days",
+      "90": "Last 90 days"
+    },
+    "noAccessTitle": "You don't have access to analytics",
+    "noAccessText": "Ask the account owner to give you orders access.",
+    "kpi": {
+      "completed": "Completed orders",
+      "completedFoot": "Delivered or returned in this period",
+      "delivered": "Delivered",
+      "deliveredFoot": "{rate} of completed orders",
+      "notDelivered": "Not delivered",
+      "notDeliveredFoot": "Returned to you",
+      "cash": "Cash collected",
+      "cashFoot": "From delivered orders",
+      "noRate": "No completed orders yet"
+    },
+    "reasons": {
+      "title": "Why orders weren't delivered",
+      "hint": "{count, plural, =0 {No failed attempts in this period} one {# failed attempt in this period} other {# failed attempts in this period}}",
+      "number": "#",
+      "reason": "Reason",
+      "share": "Share",
+      "orders": "Attempts",
+      "emptyTitle": "No failed attempts",
+      "emptyText": "Every delivery attempt in this period reached the customer.",
+      "labels": {
+        "customer_not_answering": "Customer not answering the phone",
+        "wrong_address": "Wrong address",
+        "customer_refused": "Customer refused the package",
+        "rescheduled_by_customer": "Customer asked to postpone",
+        "unclear_address": "Address not clear",
+        "unspecified": "No reason given",
+        "other": "Other reasons"
+      }
+    },
+    "success": {
+      "title": "Delivery success rate",
+      "chartLabel": "{rate} of completed orders delivered",
+      "deliveredWord": "delivered",
+      "delivered": "Delivered",
+      "notDelivered": "Not delivered",
+      "total": "Completed orders",
+      "emptyTitle": "Nothing completed yet",
+      "emptyText": "Your success rate shows here once orders are delivered or returned."
+    },
+    "attempts": {
+      "title": "Delivery attempts",
+      "hint": "Share of orders delivered on each try",
+      "first": "1st try",
+      "second": "2nd try",
+      "third": "3rd try",
+      "barLabel": "Delivered on the {try}: {share}",
+      "emptyTitle": "No deliveries yet",
+      "emptyText": "Once orders are delivered you'll see how many arrived on the first try."
+    },
+    "time": {
+      "title": "Average delivery time",
+      "hint": "From pickup to the customer's door",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "hours": "{count} h",
+      "daysAndHours": "{days}, {hours}",
+      "underHour": "Under 1 h",
+      "basedOn": "{count, plural, one {Based on # delivered order} other {Based on # delivered orders}}",
+      "emptyTitle": "No deliveries yet",
+      "emptyText": "The average shows here once orders are delivered."
+    },
+    "governorates": {
+      "title": "By governorate",
+      "hint": "Green is 88% or more delivered.",
+      "number": "#",
+      "governorate": "Governorate",
+      "rate": "Success rate",
+      "delivered": "Delivered orders",
+      "share": "Share of orders",
+      "emptyTitle": "No completed orders yet",
+      "emptyText": "Each governorate you deliver to shows here with its success rate."
+    },
+    "cashOuts": {
+      "title": "Cash-outs",
+      "hint": "Money sent to your bank in this period",
+      "openWallet": "Open wallet",
+      "reference": "Reference",
+      "date": "Date",
+      "amount": "Amount",
+      "emptyTitle": "No cash-outs in this period",
+      "emptyText": "Cash-outs sent to your bank in this period show here."
+    },
+    "cash": {
+      "title": "Cash collected and fees",
+      "hint": "Completed orders in this period",
+      "collected": "Cash collected",
+      "fees": "Shiply fees",
+      "net": "Net to you",
+      "chartLabel": "Cash collected and Shiply fees from {from} to {to}: {cash} collected, {fees} in fees",
+      "date": "Date",
+      "emptyTitle": "No cash collected in this period",
+      "emptyText": "Cash from delivered orders and Shiply fees show here day by day."
+    }
+  }
+}

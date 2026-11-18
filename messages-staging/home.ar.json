@@ -1,0 +1,71 @@
+{
+  "home": {
+    "greeting": {
+      "morning": "صباح الخير، {name}",
+      "afternoon": "نهارك سعيد، {name}",
+      "evening": "مساء الخير، {name}"
+    },
+    "today": "النهارده:",
+    "todayDelivered": "{count} اتوصّلوا",
+    "todayPickedUp": "{count} اتاستلموا",
+    "todayCreated": "{count, plural, zero {مفيش طلبات جديدة} one {طلب جديد} two {طلبين جداد} few {# طلبات جديدة} many {# طلب جديد} other {# طلب جديد}}",
+    "todayNeedAction": "{count, plural, one {طلب محتاج قرارك} two {طلبين محتاجين قرارك} few {# طلبات محتاجة قرارك} many {# طلب محتاج قرارك} other {# طلب محتاج قرارك}}",
+    "nextCashOutLine": "تحويلك الجاي هيوصل {date}.",
+    "quietDay": "اعمل طلب وإحنا هنيجي نستلمه منك.",
+    "createOrder": "إنشاء طلب",
+    "requestPickup": "طلب استلام",
+    "stats": {
+      "label": "طلباتك دلوقتي",
+      "inProgress": "جاري الشحن",
+      "new": "جديد، لسه متاستلمش",
+      "comingBack": "راجع ليك",
+      "cashCollected": "الفلوس اللي اتحصّلت"
+    },
+    "needs": {
+      "title": "محتاج قرارك",
+      "hint": "المناديب مستنيين قرارك في الطلبات دي.",
+      "seeAll": "شوف الـ {count}",
+      "noReason": "المندوب مستني قرارك",
+      "attempt": "المحاولة {attempt} من {max}",
+      "deliverAgain": "حاول التوصيل تاني",
+      "returnToMe": "رجّعه ليا",
+      "noteLabel": "ملاحظة للمندوب",
+      "notePlaceholder": "مثلًا العميل أكّد بالتليفون، وصّله بكرة بعد 5 العصر",
+      "noteRequired": "اكتب ملاحظة قصيرة عشان المندوب يعرف يعمل إيه.",
+      "send": "ابعت الرد",
+      "cancel": "رجوع",
+      "answeredDeliver": "هنحاول نوصّل الطلب {number} تاني",
+      "answeredReturn": "الطلب {number} راجع لك"
+    },
+    "chart": {
+      "title": "التوصيلات",
+      "hint": "آخر 14 يوم",
+      "delivered": "اتوصّل",
+      "returned": "رجع",
+      "todayLabel": "النهارده",
+      "summary": "الطلبات اللي اتوصّلت واللي رجعت كل يوم في آخر 14 يوم: {delivered} اتوصّلت و{returned} رجعت.",
+      "bar": "{date}: {delivered} اتوصّلت، {returned} رجعت",
+      "day": "اليوم",
+      "emptyTitle": "لسه مفيش توصيلات",
+      "emptyText": "أول ما طلباتك تتوصّل، هتلاقي كل يوم هنا."
+    },
+    "money": {
+      "collected": "الفلوس اللي اتحصّلت · الدورة دي",
+      "expected": "المتوقع من الطلبات الشغالة",
+      "nextCashOut": "التحويل الجاي",
+      "openWallet": "افتح المحفظة"
+    },
+    "expected": {
+      "hint": "فلوس لسه هنحصّلها من طلبات ماتوصّلتش"
+    },
+    "grow": {
+      "title": "نمِّ نشاطك مع Shiply",
+      "products": "اختر وانتقي",
+      "productsText": "ضيف منتجاتك والعميل ياخد اللي عاجبه على الباب",
+      "pickups": "الاستلامات",
+      "pickupsText": "احجز استلام وإحنا نيجي لك",
+      "pricing": "الأسعار والتأمين",
+      "pricingText": "أسعار التوصيل ورسوم التحصيل والتغطية لحد 25,000 ج.م"
+    }
+  }
+}
