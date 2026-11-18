@@ -132,6 +132,7 @@ model Merchant {
   products        Product[]
   orders          Order[]
   bulkUploads     BulkUpload[]
+  pickups         Pickup[]
 }
 
 model MerchantMember {
@@ -155,14 +156,18 @@ model PickupLocation {
   merchantId  String   @db.Uuid
   label       String
   addressText String
-  areaId      String?  @db.Uuid
-  isDefault   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  areaId        String?  @db.Uuid
+  contactName   String   @default("")
+  contactMobile String   @default("")
+  isDefault     Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   merchant     Merchant @relation(fields: [merchantId], references: [id])
   area         Area?    @relation(fields: [areaId], references: [id])
   returnOrders Order[]
+  pickups      Pickup[]
 
   @@index([merchantId])
   @@index([areaId])
@@ -437,6 +442,7 @@ model Order {
   items          OrderItem[]
   events         OrderEvent[]
   labelPrints    LabelPrint[]
+  pickupOrder    PickupOrder?
   linksFrom      OrderLink[]     @relation("linkFrom")
   linksTo        OrderLink[]     @relation("linkTo")
 
@@ -532,4 +538,55 @@ model SavedView {
   createdAt DateTime @default(now())
 
   @@index([userId, merchantId])
+}
+
+// ---------- Pickups ----------
+
+enum PickupStatus {
+  scheduled
+  collected
+  canceled
+}
+
+// A courier visit to collect a merchant's ready orders. Address and contact are
+// snapshots, so editing the location later does not change a booked pickup.
+model Pickup {
+  id             String       @id @default(uuid()) @db.Uuid
+  number         String       @unique
+  merchantId     String       @db.Uuid
+  locationId     String       @db.Uuid
+  addressText    String
+  areaId         String?      @db.Uuid
+  contactName    String
+  contactMobile  String
+  pickupDate     DateTime     @db.Date
+  expectedCount  Int
+  status         PickupStatus @default(scheduled)
+  repeatWeekly   Boolean      @default(false)
+  seriesId       String?      @db.Uuid
+  collectedCount Int?
+  rating         Int?
+  ratingComment  String?
+  createdBy      String       @db.Uuid
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  merchant Merchant       @relation(fields: [merchantId], references: [id])
+  location PickupLocation @relation(fields: [locationId], references: [id])
+  orders   PickupOrder[]
+
+  @@index([merchantId, status, pickupDate])
+  @@index([locationId, pickupDate])
+  @@index([pickupDate, status])
+}
+
+// Which orders a pickup is meant to collect; an order is in at most one pickup.
+model PickupOrder {
+  pickupId String @db.Uuid
+  orderId  String @unique @db.Uuid
+
+  pickup Pickup @relation(fields: [pickupId], references: [id])
+  order  Order  @relation(fields: [orderId], references: [id])
+
+  @@id([pickupId, orderId])
 }
