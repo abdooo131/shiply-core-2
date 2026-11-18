@@ -20,6 +20,16 @@ describe('seed', () => {
     expect(await db.user.count()).toBe(2);
   });
 
+  it('writes the global business values once, without overwriting a changed one', async () => {
+    await db.setting.update({ where: { scope_key: { scope: 'global', key: 'open_package_fee_piasters' } }, data: { valueJson: { value: 900 } } });
+    runSeed();
+    expect(await db.setting.count({ where: { scope: 'global' } })).toBe(6);
+    const vat = await db.setting.findUniqueOrThrow({ where: { scope_key: { scope: 'global', key: 'vat_basis_points' } } });
+    expect(vat.valueJson).toEqual({ value: 1400 });
+    const openPackage = await db.setting.findUniqueOrThrow({ where: { scope_key: { scope: 'global', key: 'open_package_fee_piasters' } } });
+    expect(openPackage.valueJson).toEqual({ value: 900 });
+  });
+
   it('loads six pricing zones and at least one area in every governorate, once', async () => {
     const areasBefore = await db.area.count();
     runSeed();

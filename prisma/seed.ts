@@ -8,6 +8,16 @@ import { AREAS, GOVERNORATE_ZONE, PRICING_ZONES } from './seed-data/places.ts';
 
 const { PrismaClient } = prismaClientPackage;
 
+// Owner decisions of 18 Nov 2026 (GOAL.md §6.5, spec §10). Existing values are never overwritten.
+const GLOBAL_SETTING_VALUES: Readonly<Record<string, number>> = {
+  vat_basis_points: 1400,
+  return_fee_basis_points: 5000,
+  cod_fee_basis_points: 100,
+  cod_fee_threshold_piasters: 300000,
+  open_package_fee_piasters: 700,
+  insurance_basis_points: 0,
+};
+
 // The seed writes a few hundred reference rows and hashes two passwords in one transaction.
 const SEED_TRANSACTION_TIMEOUT_MS = 60_000;
 const { hash } = argon2Package;
@@ -87,6 +97,9 @@ async function main(): Promise<void> {
         await tx.governorate.upsert({ where: { code }, create: { code, nameEn, nameAr }, update: {} });
       }
       await seedPlaces(tx);
+      for (const [key, value] of Object.entries(GLOBAL_SETTING_VALUES)) {
+        await tx.setting.upsert({ where: { scope_key: { scope: 'global', key } }, create: { scope: 'global', key, valueJson: { value } }, update: {} });
+      }
 
       const owner =
         (await tx.user.findUnique({ where: { email: ownerEmail } })) ??
