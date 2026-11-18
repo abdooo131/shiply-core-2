@@ -128,6 +128,10 @@ model Merchant {
   pickupLocations PickupLocation[]
   bankAccounts    BankAccount[]
   priceLists      PriceList[]
+  customers       Customer[]
+  products        Product[]
+  orders          Order[]
+  bulkUploads     BulkUpload[]
 }
 
 model MerchantMember {
@@ -156,8 +160,9 @@ model PickupLocation {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  merchant Merchant @relation(fields: [merchantId], references: [id])
-  area     Area?    @relation(fields: [areaId], references: [id])
+  merchant     Merchant @relation(fields: [merchantId], references: [id])
+  area         Area?    @relation(fields: [areaId], references: [id])
+  returnOrders Order[]
 
   @@index([merchantId])
   @@index([areaId])
@@ -218,6 +223,7 @@ model Area {
   governorate     Governorate      @relation(fields: [governorateCode], references: [code])
   zone            PricingZone      @relation(fields: [zoneCode], references: [code])
   pickupLocations PickupLocation[]
+  orders          Order[]
 
   @@unique([governorateCode, nameEn])
   @@index([zoneCode])
@@ -325,4 +331,191 @@ model ActivePriceList {
   updatedAt   DateTime @updatedAt
 
   priceList PriceList @relation(fields: [priceListId], references: [id])
+}
+
+// ---------- Orders ----------
+
+enum OrderStatus {
+  new
+  pickup_requested
+  picked_up
+  in_progress
+  out_for_delivery
+  attempt_failed
+  awaiting_merchant_action
+  rescheduled
+  delivered
+  returning
+  returned
+  canceled
+}
+
+enum CashDirection {
+  collect
+  give
+}
+
+enum LabelFormat {
+  a6
+  a4
+}
+
+// A merchant's customer, found again by mobile for the returning-customer offer.
+model Customer {
+  id              String   @id @default(uuid()) @db.Uuid
+  merchantId      String   @db.Uuid
+  mobile          String
+  name            String
+  lastAddressText String
+  lastAreaId      String?  @db.Uuid
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  merchant Merchant @relation(fields: [merchantId], references: [id])
+  orders   Order[]
+
+  @@unique([merchantId, mobile])
+}
+
+// The merchant's catalogue, used to pick items for Pick & Choose orders.
+model Product {
+  id            String   @id @default(uuid()) @db.Uuid
+  merchantId    String   @db.Uuid
+  nameEn        String
+  nameAr        String
+  pricePiasters Int
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  merchant Merchant    @relation(fields: [merchantId], references: [id])
+  items    OrderItem[]
+
+  @@index([merchantId, isActive])
+}
+
+// Fees are frozen at creation and never recalculated.
+model Order {
+  id                   String         @id @default(uuid()) @db.Uuid
+  number               String         @unique
+  merchantId           String         @db.Uuid
+  type                 OrderType
+  status               OrderStatus    @default(new)
+  customerId           String         @db.Uuid
+  customerName         String
+  customerMobile       String
+  addressText          String
+  addressExtra         String?
+  areaId               String         @db.Uuid
+  size                 PackageSize
+  description          String?
+  codAmountPiasters    Int            @default(0)
+  refundPiasters       Int            @default(0)
+  cashDirection        CashDirection?
+  allowOpenPackage     Boolean        @default(false)
+  depositRequired      Boolean        @default(false)
+  insuredValuePiasters Int            @default(0)
+  shippingPiasters     Int
+  openPackagePiasters  Int            @default(0)
+  codFeePiasters       Int            @default(0)
+  insurancePiasters    Int            @default(0)
+  vatPiasters          Int
+  totalFeePiasters     Int
+  merchantReference    String?
+  courierNote          String?
+  returnLocationId     String?        @db.Uuid
+  attempts             Int            @default(0)
+  expectedDeliveryDate DateTime?      @db.Date
+  createdBy            String         @db.Uuid
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  merchant       Merchant        @relation(fields: [merchantId], references: [id])
+  customer       Customer        @relation(fields: [customerId], references: [id])
+  area           Area            @relation(fields: [areaId], references: [id])
+  returnLocation PickupLocation? @relation(fields: [returnLocationId], references: [id])
+  items          OrderItem[]
+  events         OrderEvent[]
+  labelPrints    LabelPrint[]
+  linksFrom      OrderLink[]     @relation("linkFrom")
+  linksTo        OrderLink[]     @relation("linkTo")
+
+  @@index([merchantId, status, createdAt])
+  @@index([merchantId, createdAt])
+  @@index([areaId])
+  @@index([customerId])
+}
+
+model OrderItem {
+  id            String  @id @default(uuid()) @db.Uuid
+  orderId       String  @db.Uuid
+  productId     String? @db.Uuid
+  nameEn        String
+  nameAr        String
+  quantity      Int     @default(1)
+  pricePiasters Int     @default(0)
+
+  order   Order    @relation(fields: [orderId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+}
+
+// Exchange and return orders point at the original order.
+model OrderLink {
+  fromOrderId String   @db.Uuid
+  toOrderId   String   @db.Uuid
+  kind        String
+  createdAt   DateTime @default(now())
+
+  fromOrder Order @relation("linkFrom", fields: [fromOrderId], references: [id])
+  toOrder   Order @relation("linkTo", fields: [toOrderId], references: [id])
+
+  @@id([fromOrderId, toOrderId])
+}
+
+// Append-only timeline (a database trigger rejects UPDATE and DELETE).
+model OrderEvent {
+  id          String       @id @default(uuid()) @db.Uuid
+  orderId     String       @db.Uuid
+  kind        String
+  fromStatus  OrderStatus?
+  toStatus    OrderStatus?
+  reason      String?
+  note        String?
+  actorUserId String?      @db.Uuid
+  at          DateTime     @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId, at])
+}
+
+model LabelPrint {
+  id        String      @id @default(uuid()) @db.Uuid
+  orderId   String      @db.Uuid
+  format    LabelFormat
+  printedBy String      @db.Uuid
+  printedAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+}
+
+model BulkUpload {
+  id           String   @id @default(uuid()) @db.Uuid
+  merchantId   String   @db.Uuid
+  fileName     String
+  fileHash     String
+  rowCount     Int
+  createdCount Int
+  failedCount  Int
+  resultJson   Json
+  uploadedBy   String   @db.Uuid
+  createdAt    DateTime @default(now())
+
+  merchant Merchant @relation(fields: [merchantId], references: [id])
+
+  @@index([merchantId, createdAt])
 }

@@ -41,6 +41,15 @@ describe('seed', () => {
     expect(small.shippingPiasters).toBe(6800);
   });
 
+  it('gives Eve Chantelle one default pickup location in Nasr City and three products, once', async () => {
+    runSeed();
+    const merchant = await db.merchant.findFirstOrThrow({ where: { nameEn: 'Eve Chantelle' } });
+    const locations = await db.pickupLocation.findMany({ where: { merchantId: merchant.id }, include: { area: true } });
+    expect(locations).toHaveLength(1);
+    expect(locations[0]).toMatchObject({ isDefault: true, area: { nameEn: 'Nasr City' } });
+    expect(await db.product.count({ where: { merchantId: merchant.id } })).toBe(3);
+  });
+
   it('loads six pricing zones and at least one area in every governorate, once', async () => {
     const areasBefore = await db.area.count();
     runSeed();

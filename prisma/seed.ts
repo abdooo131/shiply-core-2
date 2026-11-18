@@ -19,6 +19,12 @@ const GLOBAL_SETTING_VALUES: Readonly<Record<string, number>> = {
   insurance_basis_points: 0,
 };
 
+const SAMPLE_PRODUCTS = [
+  { nameEn: 'Satin dress', nameAr: 'فستان ساتان', pricePiasters: 120000 },
+  { nameEn: 'Linen shirt', nameAr: 'قميص كتان', pricePiasters: 65000 },
+  { nameEn: 'Silk scarf', nameAr: 'إيشارب حرير', pricePiasters: 35000 },
+];
+
 // The seed writes a few hundred reference rows and hashes two passwords in one transaction.
 const SEED_TRANSACTION_TIMEOUT_MS = 60_000;
 const { hash } = argon2Package;
@@ -111,6 +117,19 @@ async function main(): Promise<void> {
       const merchant =
         (await tx.merchant.findFirst({ where: { nameEn: FIRST_MERCHANT.nameEn } })) ??
         (await tx.merchant.create({ data: FIRST_MERCHANT }));
+
+      // Return location for orders (owner-editable with Pickups in Plan 5) and Pick & Choose samples.
+      const hasLocation = await tx.pickupLocation.findFirst({ where: { merchantId: merchant.id } });
+      if (!hasLocation) {
+        const nasrCity = await tx.area.findFirstOrThrow({ where: { governorateCode: 'C', nameEn: 'Nasr City' } });
+        await tx.pickupLocation.create({
+          data: { merchantId: merchant.id, label: 'Main warehouse', addressText: 'Nasr City warehouse', areaId: nasrCity.id, isDefault: true },
+        });
+      }
+      const hasProducts = await tx.product.findFirst({ where: { merchantId: merchant.id } });
+      if (!hasProducts) {
+        await tx.product.createMany({ data: SAMPLE_PRODUCTS.map((product) => ({ ...product, merchantId: merchant.id })) });
+      }
 
       await tx.merchantMember.upsert({
         where: { merchantId_userId: { merchantId: merchant.id, userId: owner.id } },
