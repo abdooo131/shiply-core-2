@@ -127,6 +127,7 @@ model Merchant {
   members         MerchantMember[]
   pickupLocations PickupLocation[]
   bankAccounts    BankAccount[]
+  priceLists      PriceList[]
 }
 
 model MerchantMember {
@@ -198,7 +199,8 @@ model PricingZone {
   nameAr    String
   sortOrder Int
 
-  areas Area[]
+  areas      Area[]
+  priceLines PriceListLine[]
 }
 
 // A district or city: the unit operations sort, route and report by.
@@ -255,4 +257,72 @@ model IdempotencyKey {
   createdAt  DateTime @default(now())
 
   @@id([scope, key])
+}
+
+// ---------- Prices ----------
+
+enum PackageSize {
+  small
+  medium
+  large
+  light_bulky
+  heavy_bulky
+}
+
+enum OrderType {
+  deliver
+  pick_and_choose
+  exchange
+  return
+  sign_and_return
+  cash_collection
+}
+
+enum PriceListStatus {
+  pending
+  active
+  retired
+  replaced
+}
+
+// A versioned set of prices. merchantId null = the default list for every merchant.
+// A list takes effect only when a second person at Shiply approves it.
+model PriceList {
+  id          String          @id @default(uuid()) @db.Uuid
+  merchantId  String?         @db.Uuid
+  version     Int
+  status      PriceListStatus @default(pending)
+  requestedBy String          @db.Uuid
+  approvedBy  String?         @db.Uuid
+  activatedAt DateTime?
+  createdAt   DateTime        @default(now())
+
+  merchant Merchant?        @relation(fields: [merchantId], references: [id])
+  lines    PriceListLine[]
+  active   ActivePriceList?
+
+  @@index([merchantId, status])
+}
+
+model PriceListLine {
+  priceListId      String      @db.Uuid
+  zoneCode         String
+  size             PackageSize
+  orderType        OrderType
+  shippingPiasters Int
+
+  priceList PriceList   @relation(fields: [priceListId], references: [id], onDelete: Cascade)
+  zone      PricingZone @relation(fields: [zoneCode], references: [code])
+
+  @@id([priceListId, zoneCode, size, orderType])
+}
+
+// Which list is in force for each scope ("default" or a merchant id).
+// The primary key guarantees one active list per scope.
+model ActivePriceList {
+  scope       String   @id
+  priceListId String   @unique @db.Uuid
+  updatedAt   DateTime @updatedAt
+
+  priceList PriceList @relation(fields: [priceListId], references: [id])
 }

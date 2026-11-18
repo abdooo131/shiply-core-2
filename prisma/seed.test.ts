@@ -30,6 +30,17 @@ describe('seed', () => {
     expect(openPackage.valueJson).toEqual({ value: 900 });
   });
 
+  it('starts with one active default price list of 180 sample prices, once', async () => {
+    runSeed();
+    const pointer = await db.activePriceList.findUniqueOrThrow({ where: { scope: 'default' } });
+    expect(await db.priceListLine.count({ where: { priceListId: pointer.priceListId } })).toBe(180);
+    expect(await db.priceList.count({ where: { merchantId: null } })).toBe(1);
+    const small = await db.priceListLine.findFirstOrThrow({
+      where: { priceListId: pointer.priceListId, zoneCode: 'cairo_giza', size: 'small', orderType: 'deliver' },
+    });
+    expect(small.shippingPiasters).toBe(6800);
+  });
+
   it('loads six pricing zones and at least one area in every governorate, once', async () => {
     const areasBefore = await db.area.count();
     runSeed();

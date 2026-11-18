@@ -4,6 +4,7 @@ import prismaClientPackage from '@prisma/client';
 import argon2Package from '@node-rs/argon2';
 
 import { areaSearchKey } from '../src/location/arabic-search-normalization.ts';
+import { buildSamplePriceLines } from '../src/pricing/sample-price-lines.ts';
 import { AREAS, GOVERNORATE_ZONE, PRICING_ZONES } from './seed-data/places.ts';
 
 const { PrismaClient } = prismaClientPackage;
@@ -128,6 +129,23 @@ async function main(): Promise<void> {
         create: { userId: staff.id, role: 'admin' },
         update: {},
       });
+
+      // Bootstrap only: the first default price list is switched on directly. Every later
+      // list goes through proposePriceList and a second person's approval.
+      const hasDefaultPrices = await tx.activePriceList.findUnique({ where: { scope: 'default' } });
+      if (!hasDefaultPrices) {
+        const list = await tx.priceList.create({
+          data: {
+            merchantId: null,
+            version: 1,
+            status: 'active',
+            requestedBy: staff.id,
+            activatedAt: new Date(),
+            lines: { create: buildSamplePriceLines() },
+          },
+        });
+        await tx.activePriceList.create({ data: { scope: 'default', priceListId: list.id } });
+      }
     }, { timeout: SEED_TRANSACTION_TIMEOUT_MS });
     console.warn('Seed done.');
   } finally {
