@@ -192,5 +192,42 @@
     "codFeeText": "على المبالغ فوق {threshold} لكل طلب.",
     "openPackageTitle": "رسوم فتح الشحنة",
     "openPackageText": "{amount} لما العميل يقدر يعاين المنتج الأول."
+  },
+  "labels": {
+    "title": "بوالص الشحن",
+    "print": "طباعة",
+    "formatLabel": "مقاس الورق",
+    "formats": {
+      "a6": "بوليصة A6 (واحدة في الصفحة)",
+      "a4": "A4 (اتنين في الصفحة)"
+    },
+    "count": "{count, plural, one {بوليصة واحدة} two {بوليصتين} other {# بوالص}}",
+    "orderNumber": "رقم الطلب",
+    "from": "من",
+    "to": "إلى",
+    "mobile": "الموبايل",
+    "address": "العنوان",
+    "cashToCollect": "المبلغ المطلوب تحصيله: {amount}",
+    "cashToGive": "مبلغ يتسلّم للعميل: {amount}",
+    "noCash": "بدون تحصيل",
+    "size": "المقاس",
+    "type": "نوع الطلب",
+    "courierNote": "ملاحظة للمندوب",
+    "createdOn": "اتعمل يوم {date}",
+    "sizes": {
+      "small": "صغير",
+      "medium": "متوسط",
+      "large": "كبير",
+      "light_bulky": "ضخم خفيف",
+      "heavy_bulky": "ضخم ثقيل"
+    },
+    "types": {
+      "deliver": "توصيل",
+      "pick_and_choose": "اختر وانتقي",
+      "exchange": "استبدال",
+      "return": "إرجاع",
+      "sign_and_return": "توقيع وإرجاع",
+      "cash_collection": "تحصيل نقدي"
+    }
   }
 }

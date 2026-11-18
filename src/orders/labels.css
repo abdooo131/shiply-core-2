@@ -1,0 +1,63 @@
+/* Airway bill labels. On screen: a toolbar and paper previews. In print: only the labels,
+   black on white so thermal and laser printers render the barcode sharply. */
+
+@page awb-a6 { size: 105mm 148mm; margin: 0; }
+@page awb-a4 { size: A4; margin: 0; }
+
+.awb-page { min-height: 100vh; background: var(--bg); color: var(--fg); padding: 16px; }
+
+.awb-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  max-width: 820px; margin: 0 auto 20px; padding: 12px 16px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--sh);
+}
+.awb-toolbar-title { display: flex; flex-direction: column; flex: 1; min-width: 160px; }
+.awb-toolbar h1 { font-size: 18px; margin: 0; }
+.awb-formats { display: flex; flex-wrap: wrap; gap: 6px; }
+.awb-formats .on { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
+.awb-sheets { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.awb-label {
+  box-sizing: border-box; display: flex; flex-direction: column; gap: 2.5mm;
+  width: 105mm; max-width: 100%; height: 148mm; padding: 5mm; overflow: hidden;
+  background: #ffffff; color: #000000; font-family: var(--f); font-size: 9.5pt; line-height: 1.3;
+  border: 1px solid var(--line-2); border-radius: 4px; box-shadow: var(--sh);
+}
+.awb-a4 .awb-label { width: 210mm; height: 148.5mm; padding: 8mm 10mm; font-size: 11pt; }
+
+.awb-label p { margin: 0; }
+.awb-k { display: block; font-size: 7.5pt; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #444444; }
+.awb-head { display: flex; align-items: center; justify-content: space-between; gap: 4mm; }
+.awb-head img { height: 8mm; width: auto; }
+.awb-created { font-size: 8pt; color: #444444; }
+
+.awb-number { border-top: 0.4mm solid #000000; border-bottom: 0.4mm solid #000000; padding: 2mm 0; text-align: center; }
+.awb-number > b { display: block; font-size: 20pt; letter-spacing: 0.08em; }
+.awb-barcode svg { display: block; width: 100%; height: auto; max-height: 26mm; margin-top: 1mm; }
+
+.awb-party b { font-size: 11pt; }
+.awb-to b { font-size: 13pt; }
+.awb-mobile { display: block; font-size: 12pt; font-weight: 700; }
+.awb-to p { font-size: 10pt; }
+.awb-area { font-weight: 700; }
+
+.awb-cash { padding: 2mm 3mm; border: 0.5mm solid #000000; font-size: 13pt; font-weight: 800; text-align: center; }
+.awb-cash-none { font-weight: 600; font-size: 11pt; }
+
+.awb-facts { display: flex; gap: 6mm; }
+.awb-note { border: 0.3mm dashed #000000; padding: 1.5mm 2mm; }
+.awb-note p { font-size: 9pt; }
+
+@media print {
+  html, body { background: #ffffff !important; }
+  .awb-page { padding: 0; min-height: 0; background: #ffffff; }
+  .awb-toolbar { display: none; }
+  .awb-sheets { display: block; }
+  .awb-label { border: none; border-radius: 0; box-shadow: none; max-width: none; }
+  .awb-a6 .awb-label { page: awb-a6; break-after: page; }
+  .awb-a4 .awb-label { page: awb-a4; }
+  .awb-a4 .awb-label:nth-child(odd) { border-bottom: 0.3mm dashed #000000; }
+  .awb-a4 .awb-label:nth-child(even) { break-after: page; }
+  .awb-label:last-child { break-after: auto; }
+}

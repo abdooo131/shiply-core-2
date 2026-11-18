@@ -192,5 +192,42 @@
     "codFeeText": "Applies to cash above {threshold} per order.",
     "openPackageTitle": "Open package fee",
     "openPackageText": "{amount} when customers may check the item first."
+  },
+  "labels": {
+    "title": "Shipping labels",
+    "print": "Print",
+    "formatLabel": "Paper size",
+    "formats": {
+      "a6": "A6 label (one per page)",
+      "a4": "A4 (two per page)"
+    },
+    "count": "{count, plural, one {# label} other {# labels}}",
+    "orderNumber": "Order no.",
+    "from": "From",
+    "to": "To",
+    "mobile": "Mobile",
+    "address": "Address",
+    "cashToCollect": "Cash to collect: {amount}",
+    "cashToGive": "Cash to give the customer: {amount}",
+    "noCash": "No cash",
+    "size": "Size",
+    "type": "Order type",
+    "courierNote": "Note for the courier",
+    "createdOn": "Created {date}",
+    "sizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "light_bulky": "Light bulky",
+      "heavy_bulky": "Heavy bulky"
+    },
+    "types": {
+      "deliver": "Deliver",
+      "pick_and_choose": "Pick & Choose",
+      "exchange": "Exchange",
+      "return": "Return",
+      "sign_and_return": "Sign & Return",
+      "cash_collection": "Cash collection"
+    }
   }
 }
