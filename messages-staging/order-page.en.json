@@ -1,0 +1,120 @@
+{
+  "orderPage": {
+    "backToOrders": "All orders",
+    "subtitle": "{type} · {size} · created {date}",
+    "printLabel": "Print label",
+    "cancel": "Cancel order",
+    "cancelTitle": "Cancel this order?",
+    "cancelText": "Order {number} for {name} will be canceled. You can't undo this.",
+    "cancelConfirm": "Yes, cancel order",
+    "keepOrder": "Keep order",
+    "canceledToast": "Order {number} canceled",
+    "createExchange": "Create exchange",
+    "createReturn": "Create return",
+    "stages": {
+      "created": "Created",
+      "pickedUp": "Picked up",
+      "onTheWay": "On the way",
+      "delivered": "Delivered",
+      "returned": "Returned"
+    },
+    "expectedOn": "Expected {date}",
+    "progress": "Order progress",
+    "tabs": {
+      "label": "Order sections",
+      "details": "Details",
+      "tracking": "Tracking & notes"
+    },
+    "awaiting": {
+      "title": "The courier is waiting for your decision",
+      "attempt": "Attempt {attempt} of {max}. Tell us what to do next.",
+      "deliverAgain": "Deliver again",
+      "returnToMe": "Return to me",
+      "noteLabel": "Note for the courier",
+      "notePlaceholder": "e.g. Customer confirmed by phone, deliver tomorrow after 5 pm",
+      "noteRequired": "Write a short note so the courier knows what to do.",
+      "send": "Send answer",
+      "cancel": "Back",
+      "answeredDeliver": "We'll try delivering again",
+      "answeredReturn": "The order is coming back to you"
+    },
+    "customer": {
+      "title": "Customer",
+      "name": "Name",
+      "mobile": "Phone",
+      "address": "Address",
+      "extra": "Floor and apartment",
+      "area": "Area"
+    },
+    "shipment": {
+      "title": "Shipment",
+      "type": "Order type",
+      "size": "Size",
+      "description": "Description",
+      "openPackage": "Can open package",
+      "items": "Products to choose from",
+      "itemLine": "{quantity}× {name} · {price}",
+      "reference": "Your reference",
+      "courierNote": "Note for the courier"
+    },
+    "delivery": {
+      "title": "Delivery",
+      "attempts": "Attempts",
+      "attemptsValue": "{attempts} of {max}",
+      "expected": "Expected",
+      "notScheduled": "Not scheduled yet",
+      "label": "Label",
+      "printed": "Printed",
+      "notPrinted": "Not printed yet"
+    },
+    "payment": {
+      "cashToCollect": "Cash to collect",
+      "refund": "Refund to the customer",
+      "cashToGive": "Cash to give",
+      "deposit": "Deposit first",
+      "insuredValue": "Insured value",
+      "notInsured": "Not insured"
+    },
+    "fees": {
+      "title": "Shiply fees",
+      "shipping": "Shipping",
+      "openPackage": "Open package",
+      "codFee": "Collection fee",
+      "insurance": "Insurance",
+      "vat": "VAT 14%",
+      "total": "Total"
+    },
+    "linked": {
+      "title": "Linked orders",
+      "original": "Original order",
+      "follow_up": "Follow-up order"
+    },
+    "notes": {
+      "title": "Notes",
+      "label": "Add a note",
+      "placeholder": "Your team and Shiply support can see it",
+      "save": "Save note",
+      "saved": "Note saved",
+      "required": "Write the note first."
+    },
+    "timeline": {
+      "title": "Timeline",
+      "created": "Order created",
+      "note": "Note",
+      "reasons": {
+        "merchant_canceled": "Canceled by you"
+      }
+    },
+    "yes": "Yes",
+    "no": "No",
+    "none": "—",
+    "errors": {
+      "invalid_input": "Please check what you entered.",
+      "invalid_transition": "This order changed in the meantime. Refresh the page and try again.",
+      "not_cancellable": "This order can no longer be canceled.",
+      "not_found": "This order was not found.",
+      "forbidden": "You do not have access to this order.",
+      "unexpected": "Something went wrong on our side. Please try again."
+    }
+  }
+}
