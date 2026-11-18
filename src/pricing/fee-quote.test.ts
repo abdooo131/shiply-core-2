@@ -12,6 +12,8 @@ let unservedAreaId = '';
 
 beforeAll(async () => {
   nasrCityId = (await db.area.findFirstOrThrow({ where: { nameEn: 'Nasr City' } })).id;
+  // A crashed earlier run may have left the test area behind (areas survive test resets).
+  await db.area.deleteMany({ where: { nameEn: UNSERVED_AREA_NAME } });
   const unserved = await db.area.create({
     data: { governorateCode: 'C', zoneCode: 'cairo_giza', nameEn: UNSERVED_AREA_NAME, nameAr: 'قرية تجريبية', searchKey: 'test', isServed: false },
   });
