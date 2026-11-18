@@ -13,6 +13,7 @@
 ## Owner decisions this plan relies on
 
 Decided:
+0. **Two separate views of place (owner, 18 Nov):** a **pricing zone** only decides the price (Cairo and Giza are one zone, `cairo_giza`); an **area** is the unit operations work with (sorting, routes, courier assignment, reports). Orders store the area; the zone is looked up from it. Never group operations by pricing zone.
 1. **Areas (18 Nov):** every district of Cairo and Giza (about 80, Arabic and English) plus the main city of each of the other 25 governorates. More districts are added later as data.
 2. **Sample prices** until Shiply's real list (spec §10.1), copied from the mockup: Deliver = `BASE[size] + ZONE_ADD[zone]`; Exchange = Deliver + 12; Return = Deliver − 4; Cash collection = 55 + `ZONE_ADD[zone]` (same for every size). Amounts in EGP.
 3. **VAT 14%** on top of Shiply's fees; **return fee 50%** of shipping; **open package EGP 7**; **COD fee 1% above EGP 3,000** (GOAL §6.5).
