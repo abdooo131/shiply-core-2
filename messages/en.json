@@ -156,6 +156,41 @@
       "area_not_served": "Shiply does not deliver to this area yet.",
       "area_not_found": "This area was not found. Pick it from the list.",
       "price_missing": "No price is set for this delivery. Contact Shiply support."
-    }
+    },
+    "zoneGroup": "Pricing zone",
+    "pricesTitle": "Prices by zone",
+    "includeVat": "Include VAT",
+    "size": "Size",
+    "pricesNote": "Prices in EGP.",
+    "sizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "light_bulky": "Light bulky",
+      "heavy_bulky": "Heavy bulky"
+    },
+    "sizeHints": {
+      "small": "Flyer up to 35×45 cm",
+      "medium": "Flyer up to 45×60 cm",
+      "large": "Box up to 50×40×30 cm",
+      "light_bulky": "Up to 15 kg",
+      "heavy_bulky": "Up to 40 kg"
+    },
+    "columns": {
+      "deliver": "Deliver",
+      "exchange": "Exchange",
+      "return": "Return",
+      "cash_collection": "Cash collection"
+    },
+    "cashOutSchedule": "Cash-out schedule",
+    "schedules": {
+      "weekly": "Once a week",
+      "twice_weekly": "Twice a week",
+      "daily": "Every day"
+    },
+    "codFeeTitle": "{percent} collection fee",
+    "codFeeText": "Applies to cash above {threshold} per order.",
+    "openPackageTitle": "Open package fee",
+    "openPackageText": "{amount} when customers may check the item first."
   }
 }

@@ -67,4 +67,9 @@ test('owner manages business, team and payouts in Arabic; a limited member is ke
   await page.goto('/ar/settings/payouts');
   await expect(page.getByRole('heading', { name: 'مش مسموح لك تدخل الصفحة دي' })).toBeVisible();
   await expect(page.getByLabel('رقم الآيبان (IBAN)')).toHaveCount(0);
+
+  // Prices are for full access and finance only.
+  await expect(tabs.getByRole('link', { name: 'الأسعار' })).toHaveCount(0);
+  await page.goto('/ar/settings/pricing');
+  await expect(page.getByRole('heading', { name: 'مش مسموح لك تدخل الصفحة دي' })).toBeVisible();
 });

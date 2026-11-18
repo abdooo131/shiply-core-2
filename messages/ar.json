@@ -156,6 +156,41 @@
       "area_not_served": "Shiply لسه مش بيوصّل للمنطقة دي.",
       "area_not_found": "المنطقة دي مش موجودة. اختارها من القائمة.",
       "price_missing": "مفيش سعر محدد للتوصيلة دي. تواصل مع دعم Shiply."
-    }
+    },
+    "zoneGroup": "منطقة التسعير",
+    "pricesTitle": "الأسعار حسب المنطقة",
+    "includeVat": "شامل الضريبة",
+    "size": "المقاس",
+    "pricesNote": "الأسعار بالجنيه المصري.",
+    "sizes": {
+      "small": "صغير",
+      "medium": "متوسط",
+      "large": "كبير",
+      "light_bulky": "ضخم خفيف",
+      "heavy_bulky": "ضخم ثقيل"
+    },
+    "sizeHints": {
+      "small": "كيس حتى 35×45 سم",
+      "medium": "كيس حتى 45×60 سم",
+      "large": "كرتونة حتى 50×40×30 سم",
+      "light_bulky": "حتى 15 كجم",
+      "heavy_bulky": "حتى 40 كجم"
+    },
+    "columns": {
+      "deliver": "توصيل",
+      "exchange": "استبدال",
+      "return": "مرتجع",
+      "cash_collection": "تحصيل نقدي"
+    },
+    "cashOutSchedule": "مواعيد التحويل",
+    "schedules": {
+      "weekly": "مرة في الأسبوع",
+      "twice_weekly": "مرتين في الأسبوع",
+      "daily": "كل يوم"
+    },
+    "codFeeTitle": "رسوم تحصيل {percent}",
+    "codFeeText": "على المبالغ فوق {threshold} لكل طلب.",
+    "openPackageTitle": "رسوم فتح الشحنة",
+    "openPackageText": "{amount} لما العميل يقدر يعاين المنتج الأول."
   }
 }

@@ -5,7 +5,9 @@ import { requireUser, type SessionUser } from '@/accounts';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { getMerchantProfile, listBankAccounts, listTeam } from '@/merchants';
+import { getActivePriceLines, getSettingValues } from '@/pricing';
 import { db } from '@/shared/db';
+import { formatPiasters } from '@/shared/money';
 import { Icon } from '@/ui/icon';
 import { Pill } from '@/ui/pill';
 import { ComingSoon } from '@/ui/shell/coming-soon';
@@ -15,6 +17,7 @@ import { InviteForm } from '../forms/invite-form';
 import { MemberActions } from '../forms/member-actions';
 import { PasswordForm } from '../forms/password-form';
 import { ThemeOptions } from '../forms/theme-options';
+import { PricingTable } from '../pricing-table';
 import { canOpenTab, COMING_SOON_TABS, isSettingsTab, SETTINGS_TABS, type SettingsTab } from '../settings-tabs';
 
 type Translate = Awaited<ReturnType<typeof getTranslations<'settings'>>>;
@@ -124,6 +127,49 @@ async function TeamTab({ t, user, merchantId, after }: { t: Translate; user: Ses
   );
 }
 
+async function PricingTab({ merchantId, locale }: { merchantId: string; locale: string }) {
+  const t = await getTranslations('pricing');
+  const [zones, lines, settings, merchant] = await Promise.all([
+    db.pricingZone.findMany({ orderBy: { sortOrder: 'asc' }, select: { code: true, nameEn: true, nameAr: true } }),
+    getActivePriceLines(merchantId),
+    getSettingValues(['vat_basis_points', 'cod_fee_basis_points', 'cod_fee_threshold_piasters', 'open_package_fee_piasters'], merchantId),
+    db.merchant.findUniqueOrThrow({ where: { id: merchantId }, select: { cashOutSchedule: true } }),
+  ]);
+  const moneyLocale = locale === 'ar' ? 'ar' : 'en';
+  // Isolated left-to-right so "1%" does not turn into "%1" inside Arabic text.
+  const percent = `⁦${settings.cod_fee_basis_points / 100}%⁩`;
+  return (
+    <div className="split" style={{ marginTop: 20 }}>
+      <PricingTable
+        zones={zones.map((zone) => ({ code: zone.code, name: locale === 'ar' ? zone.nameAr : zone.nameEn }))}
+        lines={lines}
+        vatBasisPoints={settings.vat_basis_points}
+      />
+      <div className="cell2" style={{ gap: 16 }}>
+        <section className="card stat">
+          <span className="k"><i><Icon name="wallet" size={16} /></i>{t('cashOutSchedule')}</span>
+          <b>{t(`schedules.${merchant.cashOutSchedule}`)}</b>
+        </section>
+        <section className="card stat">
+          <span className="k"><i><Icon name="coin" size={16} /></i>{t('codFeeTitle', { percent })}</span>
+          <span className="foot">
+            {t('codFeeText', { threshold: formatWholePounds(settings.cod_fee_threshold_piasters, moneyLocale) })}
+          </span>
+        </section>
+        <section className="card stat">
+          <span className="k"><i><Icon name="box" size={16} /></i>{t('openPackageTitle')}</span>
+          <span className="foot">{t('openPackageText', { amount: formatPiasters(settings.open_package_fee_piasters, moneyLocale) })}</span>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+// "EGP 3,000" rather than "EGP 3,000.00" for round thresholds in sentences.
+function formatWholePounds(amountPiasters: number, locale: 'en' | 'ar'): string {
+  return formatPiasters(amountPiasters, locale).replace(/\.00(?=\D|$)/, '');
+}
+
 async function PayoutsTab({ t, user, merchantId }: { t: Translate; user: SessionUser; merchantId: string }) {
   const accounts = await listBankAccounts(user, merchantId);
   return (
@@ -180,6 +226,7 @@ export default async function SettingsTabPage({
       );
     }
     if (current === 'team') return <TeamTab t={t} user={user} merchantId={merchantId} after={after} />;
+    if (current === 'pricing') return <PricingTab merchantId={merchantId} locale={safeLocale} />;
     return <PayoutsTab t={t} user={user} merchantId={merchantId} />;
   };
 

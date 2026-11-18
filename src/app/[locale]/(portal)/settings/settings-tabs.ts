@@ -6,14 +6,14 @@ export const SETTINGS_TABS = [
 export type SettingsTab = (typeof SETTINGS_TABS)[number];
 
 // Tabs whose screens are built in later plans.
-export const COMING_SOON_TABS: ReadonlySet<SettingsTab> = new Set(['security', 'pricing', 'billing', 'api']);
+export const COMING_SOON_TABS: ReadonlySet<SettingsTab> = new Set(['security', 'billing', 'api']);
 
 // Tabs that need a particular merchant access; the rest are open to every member.
 const TAB_NEEDS: Partial<Record<SettingsTab, MerchantNeed>> = {
   business: 'business',
   payouts: 'finance',
   team: 'team',
-  pricing: 'business',
+  pricing: 'finance',
   billing: 'finance',
   api: 'business',
 };
