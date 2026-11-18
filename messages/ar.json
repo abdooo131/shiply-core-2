@@ -1,0 +1,53 @@
+{
+  "shell": {
+    "mainNavigation": "التنقل الرئيسي",
+    "home": "الرئيسية",
+    "orders": "الطلبات",
+    "pickups": "الاستلامات",
+    "wallet": "المحفظة",
+    "packaging": "مواد التغليف",
+    "credits": "الرصيد المسبق",
+    "products": "المنتجات",
+    "analytics": "التحليلات",
+    "applications": "التطبيقات",
+    "capital": "التمويل",
+    "support": "الدعم",
+    "settings": "الإعدادات",
+    "more": "المزيد",
+    "groupGrow": "نمِّ نشاطك",
+    "groupAccount": "الحساب",
+    "insuranceActive": "التأمين مفعّل",
+    "insuranceCover": "تغطية حتى 25,000 ج.م",
+    "helpTitle": "محتاج مساعدة؟",
+    "helpText": "فريقنا بيرد خلال 15 دقيقة، من 9 الصبح لـ 9 بالليل.",
+    "chatWithUs": "تحدث معنا",
+    "createOrder": "إنشاء طلب",
+    "searchPlaceholder": "ابحث في الطلبات والعملاء وأرقام التتبع…",
+    "switchLanguage": "Switch to English",
+    "languageButton": "EN",
+    "darkMode": "الوضع الداكن",
+    "lightMode": "الوضع الفاتح",
+    "notifications": "الإشعارات",
+    "signOut": "تسجيل الخروج",
+    "merchantNumber": "تاجر",
+    "comingSoonTitle": "قريبًا في خطوة لاحقة",
+    "comingSoonText": "الجزء ده من Shiply تحت التنفيذ، وهيظهر هنا أول ما يجهز.",
+    "welcome": "أهلًا، {name}"
+  },
+  "login": {
+    "title": "سجّل الدخول إلى Shiply",
+    "subtitle": "استخدم البريد الإلكتروني أو رقم الموبايل المسجل في حسابك.",
+    "identifier": "البريد الإلكتروني أو رقم الموبايل",
+    "identifierPlaceholder": "name@store.com أو 010…",
+    "password": "كلمة المرور",
+    "submit": "تسجيل الدخول",
+    "submitting": "جاري تسجيل الدخول…",
+    "tagline": "توصيل في اليوم التالي في كل مصر، وفلوسك بتوصلك في ميعادها.",
+    "errors": {
+      "invalid_credentials": "البريد الإلكتروني أو رقم الموبايل أو كلمة المرور غير صحيحة.",
+      "account_locked": "محاولات خاطئة كثيرة. حاول مرة أخرى بعد 15 دقيقة.",
+      "missing_fields": "اكتب البريد الإلكتروني أو رقم الموبايل وكلمة المرور.",
+      "unexpected": "حصلت مشكلة عندنا. حاول مرة أخرى."
+    }
+  }
+}

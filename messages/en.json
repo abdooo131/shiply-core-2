@@ -1,0 +1,53 @@
+{
+  "shell": {
+    "mainNavigation": "Main navigation",
+    "home": "Home",
+    "orders": "Orders",
+    "pickups": "Pickups",
+    "wallet": "Wallet",
+    "packaging": "Packaging",
+    "credits": "Credits",
+    "products": "Products",
+    "analytics": "Analytics",
+    "applications": "Applications",
+    "capital": "Capital",
+    "support": "Support",
+    "settings": "Settings",
+    "more": "More",
+    "groupGrow": "Grow",
+    "groupAccount": "Account",
+    "insuranceActive": "Insurance active",
+    "insuranceCover": "Covered up to EGP 25,000",
+    "helpTitle": "Need a hand?",
+    "helpText": "Our team replies within 15 minutes, 9 am – 9 pm.",
+    "chatWithUs": "Chat with us",
+    "createOrder": "Create order",
+    "searchPlaceholder": "Search orders, customers, tracking numbers…",
+    "switchLanguage": "Switch to Arabic",
+    "languageButton": "ع",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "notifications": "Notifications",
+    "signOut": "Sign out",
+    "merchantNumber": "Merchant",
+    "comingSoonTitle": "Coming in a later step",
+    "comingSoonText": "This part of Shiply is being built. It will appear here when it is ready.",
+    "welcome": "Welcome, {name}"
+  },
+  "login": {
+    "title": "Sign in to Shiply",
+    "subtitle": "Use the email or mobile number on your account.",
+    "identifier": "Email or mobile number",
+    "identifierPlaceholder": "name@store.com or 010…",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "tagline": "Next-day delivery across Egypt, with your cash on time.",
+    "errors": {
+      "invalid_credentials": "The email, mobile number or password is not correct.",
+      "account_locked": "Too many wrong attempts. Try again in 15 minutes.",
+      "missing_fields": "Enter your email or mobile number and your password.",
+      "unexpected": "Something went wrong on our side. Please try again."
+    }
+  }
+}
