@@ -4,11 +4,12 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/accounts';
 import { routing, type Locale } from '@/i18n/routing';
 import { cancelOrders } from '@/orders/merchant-order-actions';
+import { addOrdersToPickup } from '@/pickups/pickups';
 import { parseOrderListQuery, toQueryString } from '@/orders/order-list';
 import { deleteSavedView, saveView } from '@/orders/saved-views';
 import { AppError } from '@/shared/app-error';
 
-const KNOWN_ERRORS = new Set(['invalid_input', 'too_many_views', 'not_found', 'forbidden']);
+const KNOWN_ERRORS = new Set(['invalid_input', 'too_many_views', 'not_found', 'forbidden', 'no_scheduled_pickup']);
 
 export type ViewActionResult = { status: 'ok' } | { status: 'error'; errorKey: string };
 export type CancelActionResult = { status: 'ok'; canceled: number; refused: number } | { status: 'error'; errorKey: string };
@@ -68,6 +69,21 @@ export async function cancelOrdersAction(locale: string, orderIds: string[]): Pr
     const result = await cancelOrders(user, merchantId, orderIds);
     revalidatePath(`/${toLocale(locale)}/orders`);
     return { status: 'ok', canceled: result.canceled.length, refused: result.refused.length };
+  } catch (error) {
+    return { status: 'error', errorKey: errorKeyOf(error) };
+  }
+}
+
+export type PickupActionResult = { status: 'ok'; added: number; pickupNumber: string } | { status: 'error'; errorKey: string };
+
+// Puts the selected new orders into the next scheduled pickup at the default location.
+export async function addToPickupAction(locale: string, orderIds: string[]): Promise<PickupActionResult> {
+  try {
+    const { user, merchantId } = await context(locale);
+    if (!Array.isArray(orderIds)) throw new AppError('invalid_input');
+    const result = await addOrdersToPickup(user, merchantId, orderIds);
+    revalidatePath(`/${toLocale(locale)}/orders`);
+    return { status: 'ok', added: result.addedCount, pickupNumber: result.number };
   } catch (error) {
     return { status: 'error', errorKey: errorKeyOf(error) };
   }

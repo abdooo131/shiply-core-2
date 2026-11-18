@@ -64,9 +64,9 @@ test('signing out returns to the sign-in page and protects the portal', async ({
 
 test('unbuilt sections show the coming-soon page', async ({ page }) => {
   await signInAsOwner(page);
-  await page.getByRole('complementary').getByRole('link', { name: 'Wallet', exact: true }).click();
-  await expect(page).toHaveURL(/\/en\/wallet$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Wallet');
+  await page.getByRole('complementary').getByRole('link', { name: 'Packaging', exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/packaging$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Packaging');
   await expect(page.getByText('Coming in a later step')).toBeVisible();
 });
 

@@ -5,7 +5,7 @@ import { useCallback, useRef, useState, useTransition } from 'react';
 import { Link, useRouter } from '@/i18n/navigation';
 import { Button } from '@/ui/button';
 import { Icon } from '@/ui/icon';
-import { cancelOrdersAction } from './actions';
+import { addToPickupAction, cancelOrdersAction } from './actions';
 import { PopoverMenu } from './popover-menu';
 
 const LABEL_FORMATS = ['a6', 'a4'] as const;
@@ -48,6 +48,18 @@ export function BulkBar({
       );
     });
 
+  const addToPickup = () =>
+    startTransition(async () => {
+      const result = await addToPickupAction(locale, orderIds);
+      if (result.status === 'error') {
+        onDone(t(`errors.${result.errorKey}`));
+        return;
+      }
+      onClear();
+      router.refresh();
+      onDone(t('addedToPickup', { count: result.added, number: result.pickupNumber }));
+    });
+
   return (
     <>
       <div className="bulkbar" role="toolbar" aria-label={t('selectedOrders')} data-testid="bulk-bar">
@@ -63,6 +75,9 @@ export function BulkBar({
         >
           <Icon name="print" size={14} /> {t('printLabels')}
         </button>
+        <Button small disabled={pending} onClick={addToPickup} data-testid="bulk-request-pickup">
+          <Icon name="truck" size={14} /> {t('requestPickup')}
+        </Button>
         <Button small onClick={() => dialogRef.current?.showModal()} data-testid="bulk-cancel">
           {t('cancelOrders')}
         </Button>

@@ -1,0 +1,190 @@
+{
+  "wallet": {
+    "title": "Wallet",
+    "tabsLabel": "Wallet sections",
+    "tabs": {
+      "balance": "Balance",
+      "cycles": "Cash cycles"
+    },
+    "noAccessTitle": "You don't have access to the wallet",
+    "noAccessText": "Ask the account owner to give you finance access.",
+    "pages": "Pages",
+    "pageOf": "Page {page} of {pageCount}",
+    "prev": "Prev",
+    "next": "Next",
+    "close": "Close",
+    "details": "Details",
+    "proofShort": "Proof",
+    "balance": {
+      "available": "Available balance",
+      "availableHint": "Everything in your wallet right now",
+      "owe": "You owe Shiply",
+      "oweHint": "Your fees are more than the cash we collected. The {amount} is taken from the cash we collect for you next."
+    },
+    "breakdown": {
+      "open": "View breakdown",
+      "title": "Balance breakdown",
+      "inWallet": "In your wallet",
+      "inWalletHint": "Cash collected minus Shiply fees",
+      "processing": "Processing today",
+      "processingHint": "Orders completed today. They join a cash cycle at 11:59 PM.",
+      "inNextCashOut": "In the next cash-out",
+      "inNextCashOutHint": "Closed cash cycles waiting to go to your bank",
+      "paidOut": "Sent to your bank",
+      "paidOutHint": "Everything taken out of your wallet",
+      "paidOutTotal": "Paid out",
+      "paidOutCount": "{count, plural, =0 {No cash-outs yet} one {# cash-out} other {# cash-outs}}",
+      "foot": "Processing + next cash-out = available balance"
+    },
+    "schedule": {
+      "title": "Cash-out schedule",
+      "names": {
+        "weekly": "Every Monday",
+        "twice_weekly": "Mon & Wed",
+        "daily": "Sun to Thu"
+      },
+      "days": {
+        "weekly": "Closed cash cycles go to your bank every Monday.",
+        "twice_weekly": "Closed cash cycles go to your bank twice a week.",
+        "daily": "Closed cash cycles go to your bank Sunday to Thursday."
+      },
+      "see": "See in Settings"
+    },
+    "next": {
+      "title": "Next cash-out",
+      "toBank": "{amount} to {bank} ··{last4}",
+      "noBank": "Add a bank account so we can send your money.",
+      "addBank": "Add bank account",
+      "scheduled": "Scheduled"
+    },
+    "transactions": {
+      "title": "Transactions",
+      "hint": "Every delivered or returned order adds a row. Cash-outs to your bank show here too.",
+      "emptyTitle": "Nothing here yet",
+      "emptyText": "Your wallet fills up as your orders are delivered."
+    },
+    "table": {
+      "transaction": "Transaction",
+      "date": "Date",
+      "category": "Category",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "reasons": {
+      "order_delivered": "Order delivered",
+      "order_returned": "Order returned",
+      "cash_out_paid": "Cash-out",
+      "other": "Adjustment"
+    },
+    "reasonHints": {
+      "order_delivered": "Cash collected minus Shiply fees",
+      "order_returned": "Shiply fees for the return",
+      "cash_out_paid": "Sent to your bank",
+      "other": "Wallet adjustment"
+    },
+    "reasonExplain": {
+      "order_delivered": "The cash your courier collected for this order, minus Shiply fees. It goes to your bank with the cash cycle of the day it was delivered.",
+      "order_returned": "Shiply fees for this order, taken from your wallet because it came back to you.",
+      "cash_out_paid": "Money sent from your wallet to your bank account.",
+      "other": "A change to your wallet balance."
+    },
+    "drawer": {
+      "details": "Details",
+      "type": "Type",
+      "when": "Date",
+      "order": "Order",
+      "cashOut": "Cash-out",
+      "proofTitle": "Transfer confirmation",
+      "proofHint": "Bank reference, amount and the cash cycles it covers",
+      "view": "View",
+      "openOrder": "Open order",
+      "done": "Done"
+    },
+    "cashOuts": {
+      "title": "Cash-outs",
+      "hint": "Every transfer from your wallet to your bank.",
+      "number": "Cash-out",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "statuses": {
+        "prepared": "Being prepared",
+        "approved": "Approved",
+        "paid": "Paid"
+      },
+      "proofLater": "Proof after it's sent",
+      "emptyTitle": "No cash-outs yet",
+      "emptyText": "Your first cash-out shows here on your next cash-out day."
+    },
+    "cycles": {
+      "title": "Cash cycles",
+      "hint": "Each cash cycle closes at 11:59 PM with all orders completed that day.",
+      "date": "Day",
+      "orders": "Orders",
+      "cash": "Cash collected",
+      "fees": "Shiply fees",
+      "net": "Net",
+      "payout": "Payout",
+      "inNextCashOut": "In next cash-out",
+      "inCashOut": "In cash-out {number}",
+      "paid": "Paid",
+      "emptyTitle": "No cash cycles yet",
+      "emptyText": "Your first cash cycle closes at 11:59 PM on the day an order is delivered."
+    },
+    "how": {
+      "open": "How cash-outs work",
+      "title": "How cash-outs work",
+      "close": "Close",
+      "steps": {
+        "collect": {
+          "title": "Your courier collects cash",
+          "text": "When the customer pays on delivery"
+        },
+        "close": {
+          "title": "The cash cycle closes",
+          "text": "Every night at 11:59 PM, with all orders completed that day"
+        },
+        "fees": {
+          "title": "Shiply fees are taken",
+          "text": "Shipping, extras and VAT for those orders"
+        },
+        "cashOut": {
+          "title": "Cash-out to your bank"
+        }
+      },
+      "cashOutText": {
+        "weekly": "On your schedule: every Monday",
+        "twice_weekly": "On your schedule: Monday and Wednesday",
+        "daily": "On your schedule: every working day, Sunday to Thursday"
+      },
+      "note": "If your fees are more than the cash collected, the difference is taken from your next cash collections.",
+      "seeSchedule": "See schedule",
+      "gotIt": "Got it"
+    },
+    "proof": {
+      "title": "Proof of transfer",
+      "back": "Wallet",
+      "slipLabel": "Proof of transfer for cash-out {number}",
+      "cashOutNumber": "Cash-out",
+      "amount": "Amount transferred",
+      "completed": "Completed",
+      "from": "From",
+      "fromHint": "Cash on delivery settlement",
+      "to": "To",
+      "holder": "Account holder: {name}",
+      "bankReference": "Bank reference",
+      "paidOn": "Sent",
+      "method": "Method",
+      "bankTransfer": "Bank transfer",
+      "for": "For",
+      "cycles": "Cash cycles {range} ({count})",
+      "walletBalance": "Wallet balance",
+      "note": "Issued by Shiply for your records. Give the bank reference to your bank if you need to trace this payment.",
+      "receiptOnFile": "The bank's receipt is on file with Shiply.",
+      "copyReference": "Copy reference",
+      "copied": "Bank reference copied",
+      "referenceIs": "Reference: {reference}",
+      "print": "Print"
+    }
+  }
+}

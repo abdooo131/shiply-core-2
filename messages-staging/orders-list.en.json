@@ -65,10 +65,10 @@
       "prepaid": "Prepaid"
     },
     "triesOptions": {
-      "any": "Any",
       "0": "Not tried yet",
-      "some": "1–2 tries",
-      "3": "3 tries"
+      "3": "3 tries",
+      "any": "Any",
+      "some": "1–2 tries"
     },
     "search": "Search",
     "searchIn": "Search {label}",
@@ -121,8 +121,11 @@
       "too_many_views": "You can keep up to 20 saved views. Delete one first.",
       "not_found": "This was not found. Refresh the page and try again.",
       "forbidden": "You do not have access to orders.",
-      "unexpected": "Something went wrong on our side. Please try again."
-    }
+      "unexpected": "Something went wrong on our side. Please try again.",
+      "no_scheduled_pickup": "No pickup is scheduled yet. Request a pickup on the Pickups page first."
+    },
+    "requestPickup": "Request pickup",
+    "addedToPickup": "{count, plural, one {Added # order} other {Added # orders}} to pickup {number}"
   },
   "orderStatus": {
     "new": "New",
