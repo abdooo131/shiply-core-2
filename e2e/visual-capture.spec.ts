@@ -13,13 +13,16 @@ for (const [label, width, height] of [['laptop', 1440, 900], ['phone', 375, 812]
     await page.getByTestId('password').fill(process.env.SEED_OWNER_PASSWORD ?? '');
     await page.getByTestId('sign-in').click();
     await page.waitForURL(/\/en$/);
-    for (const locale of ['en', 'ar']) {
-      for (const theme of ['light', 'dark']) {
-        await page.goto(`/${locale}/wallet`);
-        await page.evaluate((chosen) => {
-          document.documentElement.dataset.theme = chosen;
-        }, theme);
-        await page.screenshot({ path: `${CAPTURE_DIR}/${label}-${locale}-${theme}.png` });
+    for (const path of ['wallet', 'settings/team', 'settings/payouts']) {
+      for (const locale of ['en', 'ar']) {
+        for (const theme of ['light', 'dark']) {
+          await page.goto(`/${locale}/${path}`);
+          await page.evaluate((chosen) => {
+            document.documentElement.dataset.theme = chosen;
+          }, theme);
+          const name = path.replace('/', '-');
+          await page.screenshot({ path: `${CAPTURE_DIR}/${label}-${name}-${locale}-${theme}.png`, fullPage: true });
+        }
       }
     }
   });

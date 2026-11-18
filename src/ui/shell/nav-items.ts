@@ -28,9 +28,11 @@ export const ACCOUNT_NAV: readonly NavItem[] = [
 
 export const ALL_NAV: readonly NavItem[] = [...MAIN_NAV, ...GROW_NAV, ...ACCOUNT_NAV];
 
+const BUILT_SECTIONS: ReadonlySet<NavKey> = new Set(['home', 'settings']);
+
 // Sections that do not have their own screen yet show the coming-soon page.
 export const COMING_SOON_SECTIONS: ReadonlySet<string> = new Set(
-  ALL_NAV.filter((item) => item.key !== 'home').map((item) => item.href.slice(1)),
+  ALL_NAV.filter((item) => !BUILT_SECTIONS.has(item.key)).map((item) => item.href.slice(1)),
 );
 
 export function isNavItemActive(item: NavItem, pathname: string): boolean {
