@@ -1,6 +1,7 @@
 import type { Order, OrderStatus } from '@prisma/client';
 import { z } from 'zod';
 import { requireMerchantAccess, type SessionUser } from '@/accounts';
+import { postOrderOutcome } from '@/money/order-bookings';
 import { writeAudit } from '@/platform/audit-log';
 import { AppError } from '@/shared/app-error';
 import { db } from '@/shared/db';
@@ -108,6 +109,9 @@ export async function changeOrderStatus(
       data: { status: to, ...(isFailedAttempt ? { attempts: { increment: 1 } } : {}) },
     });
     if (updated.count === 0) throw new AppError('invalid_transition', 409);
+
+    // The money side of a final outcome is saved together with the status change, or not at all.
+    if (to === 'delivered' || to === 'returned') await postOrderOutcome(tx, order.id, to);
 
     await tx.orderEvent.create({
       data: {

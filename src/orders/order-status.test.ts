@@ -1,6 +1,7 @@
 import type { OrderStatus } from '@prisma/client';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { makeMerchant, makeSessionUser } from '@/merchants/merchants-test-fixtures';
+import { seedPricingDefaults } from '@/pricing/pricing-test-fixtures';
 import { db } from '@/shared/db';
 import { resetTestDatabase } from '@/shared/test-db';
 import { addOrderNote, changeOrderStatus, getOrderTimeline, MAX_DELIVERY_ATTEMPTS, ORDER_STATUS_TRANSITIONS } from './order-status';
@@ -12,7 +13,11 @@ async function insertOrderWithStatus(merchantId: string, status: OrderStatus, at
 }
 
 describe('order status changes', () => {
-  beforeEach(resetTestDatabase);
+  beforeEach(async () => {
+    await resetTestDatabase();
+    // Final outcomes book money, which reads VAT and return-fee settings.
+    await seedPricingDefaults();
+  });
 
   it('allows every listed change for staff and records who, when and why', async () => {
     const merchant = await makeMerchant();
@@ -148,7 +153,11 @@ describe('order status changes', () => {
 });
 
 describe('order notes and timeline', () => {
-  beforeEach(resetTestDatabase);
+  beforeEach(async () => {
+    await resetTestDatabase();
+    // Final outcomes book money, which reads VAT and return-fee settings.
+    await seedPricingDefaults();
+  });
 
   it('shows status changes and notes oldest first', async () => {
     const merchant = await makeMerchant();
