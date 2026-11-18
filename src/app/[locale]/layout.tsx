@@ -5,7 +5,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { routing, RTL_LOCALES } from '@/i18n/routing';
-import { THEME_INIT_SCRIPT } from '@/ui/shell/theme-toggle';
+import { THEME_INIT_SCRIPT, ThemeSync } from '@/ui/shell/theme-toggle';
 import '@/ui/tokens.css';
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', display: 'swap' });
@@ -44,7 +44,10 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <ThemeSync />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

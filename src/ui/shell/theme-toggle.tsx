@@ -1,13 +1,33 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Icon } from '../icon';
 
 export const THEME_STORAGE_KEY = 'shiply-theme';
 
 // Runs before first paint (inlined in the root layout) so the page never flashes the wrong theme.
 export const THEME_INIT_SCRIPT = `try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}`;
+
+function readStoredTheme(): 'light' | 'dark' | null {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    return stored === 'light' || stored === 'dark' ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+// Switching language re-renders <html> without a full page load, which drops the
+// data-theme attribute set by THEME_INIT_SCRIPT. Re-apply it before paint on each switch.
+export function ThemeSync() {
+  const locale = useLocale();
+  useLayoutEffect(() => {
+    const stored = readStoredTheme();
+    if (stored) document.documentElement.dataset.theme = stored;
+  }, [locale]);
+  return null;
+}
 
 function currentTheme(): 'light' | 'dark' {
   const chosen = document.documentElement.dataset.theme;

@@ -35,14 +35,19 @@ async function findUser(identifier: Identifier): Promise<User | null> {
 async function recordFailure(user: User | null, method: string): Promise<void> {
   await db.$transaction(async (tx) => {
     if (user) {
-      const failedSignIns = user.failedSignIns + 1;
-      const shouldLock = failedSignIns >= MAX_FAILED_SIGN_INS;
-      await tx.user.update({
+      // Increment in the database, not from the value read earlier: parallel
+      // wrong attempts must each count, or guessing in bursts skips the lock.
+      const updated = await tx.user.update({
         where: { id: user.id },
-        data: shouldLock
-          ? { failedSignIns: 0, lockedUntil: new Date(Date.now() + LOCKOUT_MS) }
-          : { failedSignIns },
+        data: { failedSignIns: { increment: 1 } },
+        select: { failedSignIns: true },
       });
+      if (updated.failedSignIns >= MAX_FAILED_SIGN_INS) {
+        await tx.user.update({
+          where: { id: user.id },
+          data: { failedSignIns: 0, lockedUntil: new Date(Date.now() + LOCKOUT_MS) },
+        });
+      }
     }
     await writeAudit(tx, {
       actorUserId: user?.id ?? null,

@@ -49,6 +49,13 @@ describe('signIn', () => {
     expect(result.user.id).toBe(user.id);
   });
 
+  it('still locks when many wrong passwords arrive at the same moment', async () => {
+    await createTestUser();
+    const attempts = Array.from({ length: 10 }, () => signIn('owner@example.test', 'nope', AGENT).catch(() => null));
+    await Promise.all(attempts);
+    await expect(signIn('owner@example.test', TEST_PASSWORD, AGENT)).rejects.toMatchObject({ code: 'account_locked' });
+  });
+
   it('rejects a disabled account', async () => {
     const { user } = await createTestUser();
     await db.user.update({ where: { id: user.id }, data: { status: 'disabled' } });

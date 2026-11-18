@@ -6,18 +6,22 @@ network picks up, sorts and delivers, couriers collect cash, customers track. Us
 office team, hub staff, couriers and customers. If it fails, parcels and cash on delivery go missing.
 Read `GOAL.md` first (the fixed end goal) and `PLAN.md` (the steps). Shiply Now is out of scope.
 
-* Stack: TypeScript, Next.js, PostgreSQL with PostGIS, managed cloud hosting. To be confirmed in
-  PLAN.md Step 2; today only the design mockup exists.
-* Main folders: `shiply-merchant-portal.html`: clickable merchant portal mockup (sample data, Arabic
-  and English). Code folders are added in Step 3.
+* Stack: TypeScript, Next.js 15 (App Router), React 19, Prisma 6, PostgreSQL 16 + PostGIS in Docker,
+  next-intl (ar/en), zod, argon2, Vitest (real test DB), Playwright (uses installed Chrome).
+* Main folders: `src/accounts` sign-in, sessions, access. `src/merchants` profile, team, payouts.
+  `src/platform` audit log, idempotency. `src/shared` money, Cairo time, mobiles, db. `src/ui` brand
+  shell and controls. `src/app/[locale]` pages. `messages/` Arabic and English text. `prisma/` schema,
+  migrations, seed. `e2e/` browser tests. `shiply-merchant-portal.html`: the approved mockup.
 * Domain terms: COD: cash on delivery. AWB: airway bill, the parcel label. RTO: return to origin.
   Cash cycle: the nightly close that books a day's cash and fees. Cash-out: payout to the merchant's
   bank. Hub safe: where couriers hand in cash. Sorting facility: inbound, sorting, outbound. Last-mile
   hub: receive, sort by zone, dispatch. Agent: outsourced courier company.
 
 ## Commands
-None yet (design stage). Install, dev server, tests, single test, lint and typecheck, and migrate are
-added here when the code starts in PLAN.md Step 3.
+* Install: `pnpm install` · Database: `pnpm db:up` (port 5434) · Seed: `pnpm db:seed`
+* Dev server: `pnpm dev` (http://localhost:3000/ar)
+* Tests: `pnpm test` · One file: `pnpm test src/accounts/sign-in.test.ts` · Browser: `pnpm test:e2e`
+* Lint and types: `pnpm lint && pnpm typecheck` · Migration: `pnpm db:migrate --name <change>`
 
 ## Read before working in these areas
 Load these only when the task touches them. Each is written when its area is built.

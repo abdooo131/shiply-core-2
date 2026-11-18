@@ -73,6 +73,18 @@ describe('bank account changes', () => {
     expect(await db.auditLog.count({ where: { action: 'bank_account.approved' } })).toBe(2);
   });
 
+  it('a newer request replaces an older one still waiting, so the old one can never be approved', async () => {
+    const merchant = await makeMerchant();
+    const owner = await makeSessionUser({ merchantId: merchant.id, access: 'full' });
+    const finance = await makeSessionUser({ staffRole: 'finance' });
+    const older = await requestBankAccountChange(owner, merchant.id, CHANGE, 'bank-1');
+    const newer = await requestBankAccountChange(owner, merchant.id, { ...CHANGE, bankName: 'Newer Bank' }, 'bank-2');
+
+    await expect(approveBankAccountChange(finance, older.id)).rejects.toMatchObject({ code: 'not_pending' });
+    await approveBankAccountChange(finance, newer.id);
+    expect((await listBankAccounts(owner, merchant.id)).map((account) => account.bankName)).toEqual(['Newer Bank']);
+  });
+
   it('cannot approve the same request twice', async () => {
     const merchant = await makeMerchant();
     const owner = await makeSessionUser({ merchantId: merchant.id, access: 'full' });

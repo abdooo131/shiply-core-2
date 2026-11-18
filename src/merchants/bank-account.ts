@@ -58,6 +58,8 @@ export async function requestBankAccountChange(
   const ibanLast4 = iban.slice(-IBAN_VISIBLE_DIGITS);
 
   return runOnce(idempotencyKey, `bank_account.request:${merchantId}`, async (tx) => {
+    // Only the latest request is under review; an older one waiting must never be approvable later.
+    await tx.bankAccount.updateMany({ where: { merchantId, status: 'pending' }, data: { status: 'replaced' } });
     const account = await tx.bankAccount.create({
       data: {
         merchantId,
