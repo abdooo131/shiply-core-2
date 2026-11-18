@@ -442,6 +442,8 @@ model Order {
 
   @@index([merchantId, status, createdAt])
   @@index([merchantId, createdAt])
+  @@index([merchantId, updatedAt])
+  @@index([merchantId, customerMobile])
   @@index([areaId])
   @@index([customerId])
 }
@@ -518,4 +520,16 @@ model BulkUpload {
   merchant Merchant @relation(fields: [merchantId], references: [id])
 
   @@index([merchantId, createdAt])
+}
+
+// A user's saved Orders filters ("views"), kept as the page's query string.
+model SavedView {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  merchantId String  @db.Uuid
+  name      String
+  query     String
+  createdAt DateTime @default(now())
+
+  @@index([userId, merchantId])
 }
