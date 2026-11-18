@@ -1024,5 +1024,245 @@
       "referenceIs": "Reference: {reference}",
       "print": "Print"
     }
+  },
+  "support": {
+    "title": "Support",
+    "subtitle": "We reply within 15 minutes, 9 am – 9 pm.",
+    "newTicket": "New ticket",
+    "newTicketTitle": "New support ticket",
+    "chatButton": "Chat with Shiply support",
+    "tabsLabel": "Ticket lists",
+    "tabs": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "statuses": {
+      "open": "Waiting for us",
+      "answered": "Answered",
+      "closed": "Closed"
+    },
+    "topics": {
+      "order": "A problem with an order",
+      "pickup": "Pickups",
+      "payment": "Payments and wallet",
+      "account": "My account",
+      "other": "Something else"
+    },
+    "topic": "Topic",
+    "orderNumber": "Order number",
+    "optional": "(optional)",
+    "subject": "Subject",
+    "subjectPlaceholder": "For example: Customer says nobody called",
+    "message": "What happened?",
+    "cancel": "Cancel",
+    "close": "Close",
+    "send": "Send ticket",
+    "sending": "Sending…",
+    "sent": "Ticket sent. We reply within 15 minutes.",
+    "openedOn": "{number} · opened {date}",
+    "aboutOrder": "Order {number}",
+    "you": "You",
+    "shiply": "Shiply",
+    "replyPlaceholder": "Write a reply",
+    "replyLabel": "Reply",
+    "sendReply": "Send",
+    "replySent": "Reply sent",
+    "closeTicket": "Close ticket",
+    "closeConfirm": "Close this ticket? You can open a new one any time.",
+    "ticketClosed": "Ticket closed",
+    "closedNote": "This ticket is closed. Open a new ticket if you need more help.",
+    "allTickets": "All tickets",
+    "pickTicketTitle": "Pick a ticket",
+    "pickTicketText": "Select a ticket from the list to see the conversation.",
+    "emptyOpenTitle": "No open tickets",
+    "emptyOpenText": "Have a question or a problem with an order? Open a ticket and we reply within 15 minutes.",
+    "emptyClosedTitle": "No closed tickets yet",
+    "emptyClosedText": "Tickets you close show here.",
+    "range": "{from}–{to} of {total}",
+    "prev": "Prev",
+    "next": "Next",
+    "pages": "Pages",
+    "pageNumber": "Page {page}",
+    "errors": {
+      "invalid_input": "Check the fields: the subject needs at least 3 characters and the message can't be empty.",
+      "not_found": "We couldn't find this order number in your orders. Check it or leave it empty.",
+      "ticket_closed": "This ticket is closed. Open a new ticket instead.",
+      "forbidden": "Your account can't do this.",
+      "unexpected": "Something went wrong. Try again in a moment."
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "How your deliveries performed over the last {days} days",
+    "periodLabel": "Period",
+    "periods": {
+      "7": "Last 7 days",
+      "30": "Last 30 days",
+      "90": "Last 90 days"
+    },
+    "noAccessTitle": "You don't have access to analytics",
+    "noAccessText": "Ask the account owner to give you orders access.",
+    "kpi": {
+      "completed": "Completed orders",
+      "completedFoot": "Delivered or returned in this period",
+      "delivered": "Delivered",
+      "deliveredFoot": "{rate} of completed orders",
+      "notDelivered": "Not delivered",
+      "notDeliveredFoot": "Returned to you",
+      "cash": "Cash collected",
+      "cashFoot": "From delivered orders",
+      "noRate": "No completed orders yet"
+    },
+    "reasons": {
+      "title": "Why orders weren't delivered",
+      "hint": "{count, plural, =0 {No failed attempts in this period} one {# failed attempt in this period} other {# failed attempts in this period}}",
+      "number": "#",
+      "reason": "Reason",
+      "share": "Share",
+      "orders": "Attempts",
+      "emptyTitle": "No failed attempts",
+      "emptyText": "Every delivery attempt in this period reached the customer.",
+      "labels": {
+        "customer_not_answering": "Customer not answering the phone",
+        "wrong_address": "Wrong address",
+        "customer_refused": "Customer refused the package",
+        "rescheduled_by_customer": "Customer asked to postpone",
+        "unclear_address": "Address not clear",
+        "unspecified": "No reason given",
+        "other": "Other reasons"
+      }
+    },
+    "success": {
+      "title": "Delivery success rate",
+      "chartLabel": "{rate} of completed orders delivered",
+      "deliveredWord": "delivered",
+      "delivered": "Delivered",
+      "notDelivered": "Not delivered",
+      "total": "Completed orders",
+      "emptyTitle": "Nothing completed yet",
+      "emptyText": "Your success rate shows here once orders are delivered or returned."
+    },
+    "attempts": {
+      "title": "Delivery attempts",
+      "hint": "Share of orders delivered on each try",
+      "first": "1st try",
+      "second": "2nd try",
+      "third": "3rd try",
+      "barLabel": "Delivered on the {try}: {share}",
+      "emptyTitle": "No deliveries yet",
+      "emptyText": "Once orders are delivered you'll see how many arrived on the first try."
+    },
+    "time": {
+      "title": "Average delivery time",
+      "hint": "From pickup to the customer's door",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "hours": "{count} h",
+      "underHour": "Under 1 h",
+      "basedOn": "{count, plural, one {Based on # delivered order} other {Based on # delivered orders}}",
+      "emptyTitle": "No deliveries yet",
+      "emptyText": "The average shows here once orders are delivered.",
+      "daysAndHours": "{days}, {hours}"
+    },
+    "governorates": {
+      "title": "By governorate",
+      "hint": "Green is 88% or more delivered.",
+      "number": "#",
+      "governorate": "Governorate",
+      "rate": "Success rate",
+      "delivered": "Delivered orders",
+      "share": "Share of orders",
+      "emptyTitle": "No completed orders yet",
+      "emptyText": "Each governorate you deliver to shows here with its success rate."
+    },
+    "cashOuts": {
+      "title": "Cash-outs",
+      "hint": "Money sent to your bank in this period",
+      "openWallet": "Open wallet",
+      "reference": "Reference",
+      "date": "Date",
+      "amount": "Amount",
+      "emptyTitle": "No cash-outs in this period",
+      "emptyText": "Cash-outs sent to your bank in this period show here."
+    },
+    "cash": {
+      "title": "Cash collected and fees",
+      "hint": "Completed orders in this period",
+      "collected": "Cash collected",
+      "fees": "Shiply fees",
+      "net": "Net to you",
+      "chartLabel": "Cash collected and Shiply fees from {from} to {to}: {cash} collected, {fees} in fees",
+      "date": "Date",
+      "emptyTitle": "No cash collected in this period",
+      "emptyText": "Cash from delivered orders and Shiply fees show here day by day."
+    }
+  },
+  "home": {
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}"
+    },
+    "today": "Today:",
+    "todayDelivered": "{count} delivered",
+    "todayPickedUp": "{count} picked up",
+    "todayCreated": "{count, plural, one {# new order} other {# new orders}}",
+    "todayNeedAction": "{count, plural, one {# needs your action} other {# need your action}}",
+    "nextCashOutLine": "Your next cash-out lands on {date}.",
+    "quietDay": "Create an order and we'll come and pick it up.",
+    "createOrder": "Create order",
+    "requestPickup": "Request pickup",
+    "stats": {
+      "label": "Your orders right now",
+      "inProgress": "In progress",
+      "new": "New, not picked up",
+      "comingBack": "Coming back",
+      "cashCollected": "Cash collected"
+    },
+    "needs": {
+      "title": "Needs your action",
+      "hint": "Couriers are waiting for your decision on these orders.",
+      "seeAll": "See all {count}",
+      "noReason": "The courier needs your decision",
+      "attempt": "attempt {attempt} of {max}",
+      "deliverAgain": "Deliver again",
+      "returnToMe": "Return to me",
+      "noteLabel": "Note for the courier",
+      "notePlaceholder": "e.g. Customer confirmed by phone, deliver tomorrow after 5 pm",
+      "noteRequired": "Write a short note so the courier knows what to do.",
+      "send": "Send answer",
+      "cancel": "Back",
+      "answeredDeliver": "We'll try delivering order {number} again",
+      "answeredReturn": "Order {number} is coming back to you"
+    },
+    "chart": {
+      "title": "Deliveries",
+      "hint": "Last 14 days",
+      "delivered": "Delivered",
+      "returned": "Returned",
+      "todayLabel": "Today",
+      "summary": "Orders delivered and returned per day over the last 14 days: {delivered} delivered, {returned} returned.",
+      "bar": "{date}: {delivered} delivered, {returned} returned",
+      "day": "Day",
+      "emptyTitle": "No deliveries yet",
+      "emptyText": "Once your first orders are delivered, you'll see each day here."
+    },
+    "money": {
+      "collected": "Cash collected · this cycle",
+      "expected": "Expected from active orders",
+      "nextCashOut": "Next cash-out",
+      "openWallet": "Open wallet"
+    },
+    "expected": {
+      "hint": "Cash still to collect from orders that are not delivered yet"
+    },
+    "grow": {
+      "title": "Grow with Shiply",
+      "products": "Pick & Choose",
+      "productsText": "Add your products so customers keep what they like at the door",
+      "pickups": "Pickups",
+      "pickupsText": "Book a pickup and we come to you",
+      "pricing": "Prices & insurance",
+      "pricingText": "Your delivery prices, COD fee and cover up to EGP 25,000"
+    }
   }
 }

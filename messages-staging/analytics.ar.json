@@ -64,7 +64,7 @@
       "title": "متوسط وقت التوصيل",
       "hint": "من الاستلام لحد باب العميل",
       "days": "{count, plural, one {يوم} two {يومين} few {# أيام} other {# يوم}}",
-      "hours": "{count} ساعة",
+      "hours": "{count, plural, one {ساعة واحدة} two {ساعتين} few {# ساعات} many {# ساعة} other {# ساعة}}",
       "daysAndHours": "{days} و{hours}",
       "underHour": "أقل من ساعة",
       "basedOn": "{count, plural, one {على أساس طلب واحد اتوصّل} two {على أساس طلبين اتوصّلوا} few {على أساس # طلبات اتوصّلت} other {على أساس # طلب اتوصّل}}",

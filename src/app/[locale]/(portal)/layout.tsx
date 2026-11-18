@@ -4,6 +4,7 @@ import { requireUser } from '@/accounts';
 import { routing } from '@/i18n/routing';
 import { db } from '@/shared/db';
 import { Sidebar } from '@/ui/shell/sidebar';
+import { SupportChatButton } from '@/ui/shell/support-chat-button';
 import { TabBar } from '@/ui/shell/tab-bar';
 import { TopBar } from '@/ui/shell/top-bar';
 
@@ -38,6 +39,7 @@ export default async function PortalLayout({
         </div>
       </div>
       <TabBar />
+      <SupportChatButton />
     </>
   );
 }

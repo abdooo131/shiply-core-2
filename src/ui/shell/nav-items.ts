@@ -28,7 +28,7 @@ export const ACCOUNT_NAV: readonly NavItem[] = [
 
 export const ALL_NAV: readonly NavItem[] = [...MAIN_NAV, ...GROW_NAV, ...ACCOUNT_NAV];
 
-const BUILT_SECTIONS: ReadonlySet<NavKey> = new Set(['home', 'orders', 'settings', 'products', 'wallet', 'pickups']);
+const BUILT_SECTIONS: ReadonlySet<NavKey> = new Set(['home', 'orders', 'settings', 'products', 'wallet', 'pickups', 'analytics', 'support']);
 
 // Sections that do not have their own screen yet show the coming-soon page.
 export const COMING_SOON_SECTIONS: ReadonlySet<string> = new Set(

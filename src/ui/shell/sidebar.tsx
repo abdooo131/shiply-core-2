@@ -40,7 +40,7 @@ export function Sidebar() {
       <div className="help-card">
         <b>{t('helpTitle')}</b>
         <span>{t('helpText')}</span>
-        <Link className="btn lime sm" style={{ alignSelf: 'flex-start' }} href="/support">
+        <Link className="btn lime sm" style={{ alignSelf: 'flex-start' }} href={{ pathname: '/support', query: { new: '1' } }}>
           {t('chatWithUs')}
         </Link>
       </div>

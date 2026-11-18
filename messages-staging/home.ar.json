@@ -10,7 +10,7 @@
     "todayPickedUp": "{count} اتاستلموا",
     "todayCreated": "{count, plural, zero {مفيش طلبات جديدة} one {طلب جديد} two {طلبين جداد} few {# طلبات جديدة} many {# طلب جديد} other {# طلب جديد}}",
     "todayNeedAction": "{count, plural, one {طلب محتاج قرارك} two {طلبين محتاجين قرارك} few {# طلبات محتاجة قرارك} many {# طلب محتاج قرارك} other {# طلب محتاج قرارك}}",
-    "nextCashOutLine": "تحويلك الجاي هيوصل {date}.",
+    "nextCashOutLine": "تحويلك الجاي هيوصل يوم {date}.",
     "quietDay": "اعمل طلب وإحنا هنيجي نستلمه منك.",
     "createOrder": "إنشاء طلب",
     "requestPickup": "طلب استلام",
