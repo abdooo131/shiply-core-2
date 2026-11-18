@@ -590,3 +590,44 @@ model PickupOrder {
 
   @@id([pickupId, orderId])
 }
+
+// ---------- Money ----------
+// Double-entry ledger. Balances are always summed from lines; nothing stores a balance.
+// Database triggers make entries and lines append-only and reject unbalanced entries.
+
+model LedgerAccount {
+  code      String   @id
+  kind      String
+  createdAt DateTime @default(now())
+
+  lines LedgerLine[]
+}
+
+model LedgerEntry {
+  id             String   @id @default(uuid()) @db.Uuid
+  idempotencyKey String   @unique
+  reason         String
+  orderId        String?  @db.Uuid
+  cashOutId      String?  @db.Uuid
+  merchantId     String?  @db.Uuid
+  postedAt       DateTime @default(now())
+
+  lines LedgerLine[]
+
+  @@index([merchantId, postedAt])
+  @@index([orderId])
+}
+
+model LedgerLine {
+  id             String @id @default(uuid()) @db.Uuid
+  entryId        String @db.Uuid
+  accountCode    String
+  // Positive = debit, negative = credit. Every entry's lines sum to zero.
+  amountPiasters Int
+
+  entry   LedgerEntry   @relation(fields: [entryId], references: [id])
+  account LedgerAccount @relation(fields: [accountCode], references: [code])
+
+  @@index([accountCode])
+  @@index([entryId])
+}
