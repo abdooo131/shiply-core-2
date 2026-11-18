@@ -631,3 +631,64 @@ model LedgerLine {
   @@index([accountCode])
   @@index([entryId])
 }
+
+enum CashOutStatus {
+  prepared
+  approved
+  paid
+  canceled
+}
+
+// One per merchant per Cairo day: the day's order bookings, closed at 23:59 Cairo.
+// Totals are copied from the ledger at close; the ledger stays the source of truth.
+model CashCycle {
+  id                    String    @id @default(uuid()) @db.Uuid
+  merchantId            String    @db.Uuid
+  cycleDate             DateTime  @db.Date
+  cashCollectedPiasters Int
+  feesPiasters          Int
+  netPiasters           Int
+  orderCount            Int
+  closedAt              DateTime  @default(now())
+  cashOutId             String?   @db.Uuid
+
+  cashOut CashOut?         @relation(fields: [cashOutId], references: [id])
+  entries CashCycleEntry[]
+
+  @@unique([merchantId, cycleDate])
+  @@index([cashOutId])
+}
+
+// Which ledger entries a cycle covers (entries themselves are append-only).
+model CashCycleEntry {
+  cycleId String @db.Uuid
+  entryId String @unique @db.Uuid
+
+  cycle CashCycle @relation(fields: [cycleId], references: [id])
+
+  @@id([cycleId, entryId])
+}
+
+// A payout to the merchant's bank: prepared by finance, approved by a second person, then paid.
+model CashOut {
+  id               String        @id @default(uuid()) @db.Uuid
+  number           String        @unique
+  merchantId       String        @db.Uuid
+  bankAccountId    String        @db.Uuid
+  amountPiasters   Int
+  scheduledDate    DateTime      @db.Date
+  status           CashOutStatus @default(prepared)
+  preparedBy       String        @db.Uuid
+  approvedBy       String?       @db.Uuid
+  paidBy           String?       @db.Uuid
+  bankReference    String?
+  receiptPath      String?
+  paidAt           DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  cycles CashCycle[]
+
+  @@index([merchantId, status])
+  @@index([status, scheduledDate])
+}

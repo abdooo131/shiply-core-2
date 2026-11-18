@@ -39,6 +39,25 @@ export function cairoDayStartUtc(date: Date): Date {
   return new Date(midnightAsUtc - cairoOffsetMinutes(guess) * MS_PER_MINUTE);
 }
 
+const CAIRO_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+// The Cairo calendar date of a moment, as "YYYY-MM-DD".
+export function cairoDateString(date: Date): string {
+  const { year, month, day } = cairoWallClock(date);
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+// The UTC moment a Cairo calendar date ("YYYY-MM-DD") starts. Throws on a malformed or impossible date.
+export function cairoDateToUtcStart(cairoDate: string): Date {
+  const match = CAIRO_DATE_PATTERN.exec(cairoDate);
+  if (!match) throw new Error(`"${cairoDate}" is not a date in YYYY-MM-DD form.`);
+  const [year, month, day] = [Number(match[1]), Number(match[2]), Number(match[3])];
+  const noonUtc = new Date(Date.UTC(year, month - 1, day, 12));
+  if (noonUtc.getUTCMonth() !== month - 1 || noonUtc.getUTCDate() !== day) throw new Error(`"${cairoDate}" is not a real date.`);
+  // Noon UTC is always the same calendar day in Cairo (UTC+2/+3), so its day start is this date's.
+  return cairoDayStartUtc(noonUtc);
+}
+
 export function cairoDayEndUtc(date: Date): Date {
   const start = cairoDayStartUtc(date);
   const nextDayStart = cairoDayStartUtc(new Date(start.getTime() + MS_PER_DAY + 2 * 60 * MS_PER_MINUTE));

@@ -1,5 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { cairoDayEndUtc, cairoDayStartUtc, formatCairo } from './cairo-time';
+import { cairoDateString, cairoDateToUtcStart, cairoDayEndUtc, cairoDayStartUtc, formatCairo } from './cairo-time';
+
+describe('cairoDateString and cairoDateToUtcStart', () => {
+  it('gives the Cairo calendar date, not the UTC one', () => {
+    expect(cairoDateString(new Date('2026-11-17T23:30:00Z'))).toBe('2026-11-18');
+    expect(cairoDateString(new Date('2026-11-17T21:30:00Z'))).toBe('2026-11-17');
+  });
+
+  it('turns a Cairo date back into the UTC moment its day starts', () => {
+    expect(cairoDateToUtcStart('2026-11-18').toISOString()).toBe('2026-11-17T22:00:00.000Z');
+    expect(cairoDateToUtcStart('2026-07-15').toISOString()).toBe('2026-07-14T21:00:00.000Z');
+  });
+
+  it('refuses a malformed date', () => {
+    expect(() => cairoDateToUtcStart('18-11-2026')).toThrow();
+    expect(() => cairoDateToUtcStart('2026-02-30')).toThrow();
+  });
+});
 
 describe('cairoDayStartUtc', () => {
   it('returns Cairo midnight in UTC during winter time (UTC+2)', () => {
