@@ -28,10 +28,11 @@ export const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, readonly OrderStatus[
   canceled: [],
 };
 
-// Merchants may only cancel before pickup and answer a question the network asked them.
+// Merchants may only cancel before pickup, put new orders into a pickup (and take
+// them back out while it is still scheduled), and answer a question the network asked them.
 const MERCHANT_TRANSITIONS: Partial<Record<OrderStatus, readonly OrderStatus[]>> = {
-  new: ['canceled'],
-  pickup_requested: ['canceled'],
+  new: ['pickup_requested', 'canceled'],
+  pickup_requested: ['new', 'canceled'],
   awaiting_merchant_action: ['in_progress', 'returning'],
 };
 

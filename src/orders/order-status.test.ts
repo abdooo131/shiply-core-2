@@ -75,6 +75,17 @@ describe('order status changes', () => {
     await expect(changeOrderStatus(member, pickedUp.id, 'canceled')).rejects.toMatchObject({ code: 'forbidden' });
   });
 
+  it('lets a merchant put a new order into a pickup and take it back out', async () => {
+    const merchant = await makeMerchant();
+    const member = await makeSessionUser({ merchantId: merchant.id, access: 'orders_pickups' });
+    const order = await insertOrderWithStatus(merchant.id, 'new');
+    await changeOrderStatus(member, order.id, 'pickup_requested', { reason: 'pickup_requested' });
+    await changeOrderStatus(member, order.id, 'new', { reason: 'pickup_canceled' });
+    expect((await db.order.findUniqueOrThrow({ where: { id: order.id } })).status).toBe('new');
+    const pickedUp = await insertOrderWithStatus(merchant.id, 'picked_up');
+    await expect(changeOrderStatus(member, pickedUp.id, 'new')).rejects.toMatchObject({ code: 'forbidden' });
+  });
+
   it('lets a merchant answer awaiting_merchant_action but not mark an order delivered', async () => {
     const merchant = await makeMerchant();
     const owner = await makeSessionUser({ merchantId: merchant.id, access: 'full' });
@@ -88,7 +99,7 @@ describe('order status changes', () => {
     const outForDelivery = await insertOrderWithStatus(merchant.id, 'out_for_delivery');
     await expect(changeOrderStatus(owner, outForDelivery.id, 'delivered')).rejects.toMatchObject({ code: 'forbidden', status: 403 });
     const fresh = await insertTestOrder(merchant.id);
-    await expect(changeOrderStatus(owner, fresh.id, 'pickup_requested')).rejects.toMatchObject({ code: 'forbidden' });
+    await expect(changeOrderStatus(owner, fresh.id, 'picked_up')).rejects.toMatchObject({ code: 'forbidden' });
   });
 
   it('refuses a member of another merchant and finance-only access', async () => {
