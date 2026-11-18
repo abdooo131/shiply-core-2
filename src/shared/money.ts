@@ -24,13 +24,16 @@ export function formatPiasters(amountPiasters: number, locale: 'en' | 'ar'): str
   return locale === 'ar' ? `${sign}${number} ج.م` : `${sign}EGP ${number}`;
 }
 
+// A percentage (in basis points, 100 = 1%) of an amount, rounded half up to the piastre.
+// Integer arithmetic: half up = floor((2 * amount * bp + whole) / (2 * whole)).
+export function basisPointsOfPiasters(amountPiasters: number, basisPoints: number): number {
+  return Math.floor((2 * amountPiasters * basisPoints + BASIS_POINTS_PER_WHOLE) / (2 * BASIS_POINTS_PER_WHOLE));
+}
+
 export function addVatPiasters(
   netPiasters: number,
   vatBasisPoints: number,
 ): { netPiasters: number; vatPiasters: number; grossPiasters: number } {
-  // Integer arithmetic: half up = floor((2 * net * bp + whole) / (2 * whole)).
-  const vatPiasters = Math.floor(
-    (2 * netPiasters * vatBasisPoints + BASIS_POINTS_PER_WHOLE) / (2 * BASIS_POINTS_PER_WHOLE),
-  );
+  const vatPiasters = basisPointsOfPiasters(netPiasters, vatBasisPoints);
   return { netPiasters, vatPiasters, grossPiasters: netPiasters + vatPiasters };
 }

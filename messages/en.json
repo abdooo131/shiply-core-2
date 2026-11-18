@@ -150,5 +150,12 @@
       "unexpected": "Something went wrong on our side. Please try again."
     },
     "showMore": "Show more"
+  },
+  "pricing": {
+    "errors": {
+      "area_not_served": "Shiply does not deliver to this area yet.",
+      "area_not_found": "This area was not found. Pick it from the list.",
+      "price_missing": "No price is set for this delivery. Contact Shiply support."
+    }
   }
 }

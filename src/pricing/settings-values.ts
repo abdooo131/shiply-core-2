@@ -42,6 +42,23 @@ export async function getSettingValue(key: SettingKey, merchantId?: string): Pro
   throw new Error(`Setting "${key}" has no global value. Run \`pnpm db:seed\` or set it as Shiply finance.`);
 }
 
+// Several values in one query, each with the same merchant-then-global rule.
+export async function getSettingValues<K extends SettingKey>(keys: readonly K[], merchantId?: string): Promise<Record<K, number>> {
+  const scopes = merchantId ? [scopeFor(merchantId), GLOBAL_SCOPE] : [GLOBAL_SCOPE];
+  const rows = await db.setting.findMany({ where: { key: { in: [...keys] }, scope: { in: scopes } } });
+  const values = {} as Record<K, number>;
+  for (const key of keys) {
+    const value = scopes
+      .map((scope) => readStoredValue(rows.find((row) => row.key === key && row.scope === scope)?.valueJson))
+      .find((candidate) => candidate !== null);
+    if (value === undefined || value === null) {
+      throw new Error(`Setting "${key}" has no global value. Run \`pnpm db:seed\` or set it as Shiply finance.`);
+    }
+    values[key] = value;
+  }
+  return values;
+}
+
 export async function setSettingValue(staffUser: SessionUser, key: SettingKey, value: number, merchantId?: string): Promise<void> {
   if (!staffUser.staffRoles.some((role) => STAFF_ROLES_ALLOWED_TO_CHANGE.has(role))) throw new AppError('forbidden', 403);
   if (!isSettingKey(key) || !Number.isSafeInteger(value) || value < 0) throw new AppError('invalid_input');

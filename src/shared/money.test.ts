@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { addVatPiasters, formatPiasters, parseEgpToPiasters } from './money';
+import { addVatPiasters, basisPointsOfPiasters, formatPiasters, parseEgpToPiasters } from './money';
+
+describe('basisPointsOfPiasters', () => {
+  it('takes a percentage, rounded half up to the piastre', () => {
+    expect(basisPointsOfPiasters(200000, 100)).toBe(2000);
+    expect(basisPointsOfPiasters(1, 100)).toBe(0);
+    expect(basisPointsOfPiasters(50, 100)).toBe(1);
+    expect(basisPointsOfPiasters(6801, 5000)).toBe(3401);
+  });
+});
 
 describe('addVatPiasters', () => {
   it('adds 14% VAT on top of the net amount', () => {
