@@ -8,7 +8,7 @@ function userWith(access: 'full' | 'orders_pickups' | 'finance'): SessionUser {
 
 describe('requireMerchantAccess', () => {
   it('lets full access do everything', () => {
-    for (const need of ['orders', 'finance', 'team'] as const) {
+    for (const need of ['orders', 'finance', 'team', 'business'] as const) {
       expect(() => requireMerchantAccess(userWith('full'), 'm1', need)).not.toThrow();
     }
   });
@@ -26,6 +26,9 @@ describe('requireMerchantAccess', () => {
   it('limits finance access to finance', () => {
     expect(() => requireMerchantAccess(userWith('finance'), 'm1', 'finance')).not.toThrow();
     expect(() => requireMerchantAccess(userWith('finance'), 'm1', 'orders')).toThrow(
+      expect.objectContaining({ code: 'forbidden' }),
+    );
+    expect(() => requireMerchantAccess(userWith('finance'), 'm1', 'business')).toThrow(
       expect.objectContaining({ code: 'forbidden' }),
     );
   });
