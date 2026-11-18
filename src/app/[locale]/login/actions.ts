@@ -14,7 +14,15 @@ const SignInInput = z.object({
   password: z.string().min(1).max(200),
 });
 
-const KNOWN_ERRORS = new Set(['invalid_credentials', 'account_locked']);
+const KNOWN_ERRORS = new Set(['invalid_credentials', 'too_many_attempts']);
+
+// The first address in X-Forwarded-For is the visitor as seen by our hosting
+// proxy. Trusting it assumes the app is only reachable through that proxy
+// (checked when hosting is set up).
+function clientAddressFrom(requestHeaders: Headers): string | null {
+  const forwarded = requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim();
+  return forwarded || requestHeaders.get('x-real-ip') || null;
+}
 
 export async function signInAction(locale: string, _previous: SignInState, formData: FormData): Promise<SignInState> {
   const parsed = SignInInput.safeParse({
@@ -24,9 +32,15 @@ export async function signInAction(locale: string, _previous: SignInState, formD
   const identifier = String(formData.get('identifier') ?? '');
   if (!parsed.success) return { errorKey: 'missing_fields', identifier };
 
-  const userAgent = (await headers()).get('user-agent') ?? '';
+  const requestHeaders = await headers();
+  const userAgent = requestHeaders.get('user-agent') ?? '';
   try {
-    const { sessionToken } = await signIn(parsed.data.identifier, parsed.data.password, userAgent);
+    const { sessionToken } = await signIn(
+      parsed.data.identifier,
+      parsed.data.password,
+      userAgent,
+      clientAddressFrom(requestHeaders),
+    );
     await setSessionCookie(sessionToken);
   } catch (error) {
     if (error instanceof AppError && KNOWN_ERRORS.has(error.code)) return { errorKey: error.code, identifier };

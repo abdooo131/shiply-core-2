@@ -9,6 +9,9 @@ import { maskIbanLast4, normalizeEgyptianIban } from './iban';
 
 const APPROVER_ROLES = new Set(['finance', 'admin']);
 const IBAN_VISIBLE_DIGITS = 4;
+// At most one active and one pending account exist (a new request replaces the
+// previous pending one); the cap keeps the list bounded even if that ever slips.
+const MAX_LISTED_BANK_ACCOUNTS = 5;
 
 export type BankAccountView = {
   id: string;
@@ -32,6 +35,7 @@ export async function listBankAccounts(user: SessionUser, merchantId: string): P
   const accounts = await db.bankAccount.findMany({
     where: { merchantId, status: { in: ['pending', 'active'] } },
     orderBy: { createdAt: 'desc' },
+    take: MAX_LISTED_BANK_ACCOUNTS,
   });
   return accounts.map((account) => ({
     id: account.id,

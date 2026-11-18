@@ -40,7 +40,9 @@ export function MemberActions({ memberUserId, access, memberName }: { memberUser
           {t('remove')}
         </Button>
       </form>
-      <FormFeedback state={accessState.status === 'idle' ? removeState : accessState} successMessage={t('saved')} />
+      {/* Each action keeps its own result, so a failed Remove is never hidden by an earlier successful Change. */}
+      <FormFeedback state={accessState} successMessage={t('saved')} />
+      <FormFeedback state={removeState} successMessage={t('saved')} />
     </div>
   );
 }

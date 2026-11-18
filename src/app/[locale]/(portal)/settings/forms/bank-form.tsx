@@ -30,7 +30,7 @@ export function BankForm() {
         spellCheck={false}
         required
         maxLength={60}
-        className="input mono"
+        className="mono"
       />
       <div>
         <Button type="submit" variant="primary" disabled={pending}>

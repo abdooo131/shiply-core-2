@@ -28,14 +28,26 @@ const InviteInput = z.object({
 
 export type InviteInput = z.input<typeof InviteInput>;
 
-export async function listTeam(user: SessionUser, merchantId: string): Promise<TeamMember[]> {
+export const TEAM_PAGE_SIZE = 50;
+
+// One page of the team, oldest first. `nextCursor` is passed back as `after` for the next page.
+export async function listTeam(
+  user: SessionUser,
+  merchantId: string,
+  { after, pageSize = TEAM_PAGE_SIZE }: { after?: string; pageSize?: number } = {},
+): Promise<{ members: TeamMember[]; nextCursor: string | null }> {
   requireMerchantAccess(user, merchantId, 'team');
-  const members = await db.merchantMember.findMany({
+  const rows = await db.merchantMember.findMany({
     where: { merchantId, status: { not: 'removed' } },
     include: { user: { select: { name: true, email: true, mobile: true } } },
-    orderBy: { createdAt: 'asc' },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    // One extra row tells us whether another page exists.
+    take: pageSize + 1,
+    ...(after ? { cursor: { id: after }, skip: 1 } : {}),
   });
-  return members.map((member) => ({
+  const hasMore = rows.length > pageSize;
+  const pageRows = hasMore ? rows.slice(0, pageSize) : rows;
+  const members = pageRows.map((member) => ({
     userId: member.userId,
     name: member.user.name,
     email: member.user.email,
@@ -43,6 +55,8 @@ export async function listTeam(user: SessionUser, merchantId: string): Promise<T
     access: member.access,
     status: member.status,
   }));
+  const lastRow = pageRows.at(-1);
+  return { members, nextCursor: hasMore && lastRow ? lastRow.id : null };
 }
 
 // Creates the person's account with a one-time password, shown once to the inviter.

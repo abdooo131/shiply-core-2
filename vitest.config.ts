@@ -10,8 +10,10 @@ process.env.DATABASE_URL = testDatabaseUrl;
 
 export default defineConfig({
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  // Components are written for React's automatic JSX runtime (no React import).
+  esbuild: { jsx: 'automatic' },
   test: {
-    include: ['src/**/*.test.ts', 'prisma/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'prisma/**/*.test.ts'],
     globalSetup: ['./src/shared/test-global-setup.ts'],
     fileParallelism: false,
     testTimeout: 20000,

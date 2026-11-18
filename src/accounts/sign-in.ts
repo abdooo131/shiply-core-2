@@ -5,6 +5,7 @@ import { db } from '@/shared/db';
 import { normalizeEgyptianMobile } from '@/shared/egyptian-mobile';
 import { hashPassword, verifyPassword } from './password';
 import { createSession, getSessionUser, type SessionUser } from './sessions';
+import { forgetAttempt, recordAttempt } from './sign-in-throttle';
 
 const MAX_FAILED_SIGN_INS = 5;
 const LOCKOUT_MS = 15 * 60 * 1000;
@@ -64,16 +65,25 @@ export async function signIn(
   identifierInput: string,
   password: string,
   userAgent: string,
+  // The caller's network address; null when it cannot be known (e.g. scripts), which skips the per-address limit.
+  clientAddress: string | null = null,
 ): Promise<{ sessionToken: string; user: SessionUser }> {
+  // Checked first, before any password hashing, so a flood from one address costs little.
+  const attemptId = clientAddress ? await recordAttempt(clientAddress) : null;
   const identifier = parseIdentifier(identifierInput);
   const method = identifier?.method ?? 'unrecognised';
   const user = await findUser(identifier);
 
-  if (user?.lockedUntil && user.lockedUntil > new Date()) {
-    throw new AppError('account_locked', 423);
+  const passwordMatches = await verifyPassword(user?.passwordHash ?? (await unknownAccountHash), password);
+
+  // A locked account answers exactly like a wrong password, in the same time,
+  // so the lock does not tell an outsider that the account exists.
+  const isLocked = Boolean(user?.lockedUntil && user.lockedUntil > new Date());
+  if (isLocked) {
+    await recordFailure(null, method);
+    throw new AppError('invalid_credentials', 401);
   }
 
-  const passwordMatches = await verifyPassword(user?.passwordHash ?? (await unknownAccountHash), password);
   if (!user || !passwordMatches || user.status !== 'active') {
     await recordFailure(user, method);
     throw new AppError('invalid_credentials', 401);
@@ -81,6 +91,11 @@ export async function signIn(
 
   const sessionToken = await db.$transaction(async (tx) => {
     await tx.user.update({ where: { id: user.id }, data: { failedSignIns: 0, lockedUntil: null } });
+    // Housekeeping per user, so the Session table never grows without bound
+    // and no background job is needed. Sign-in history stays in the audit log.
+    await tx.session.deleteMany({
+      where: { userId: user.id, OR: [{ expiresAt: { lte: new Date() } }, { revokedAt: { not: null } }] },
+    });
     await writeAudit(tx, {
       actorUserId: user.id,
       action: 'auth.sign_in',
@@ -91,6 +106,9 @@ export async function signIn(
     });
     return createSession(tx, user.id, userAgent);
   });
+
+  // Successful sign-ins do not count against the address.
+  if (attemptId) await forgetAttempt(attemptId);
 
   const sessionUser = await getSessionUser(sessionToken);
   if (!sessionUser) throw new Error('Session was created but could not be read back.');

@@ -62,6 +62,16 @@ model Session {
   @@index([userId])
 }
 
+// Recent sign-in attempts per network address, for the per-address limit.
+// The address is stored only as a keyed hash; rows older than the window are pruned.
+model SignInAttempt {
+  id          String   @id @default(uuid()) @db.Uuid
+  addressHash String
+  at          DateTime @default(now())
+
+  @@index([addressHash, at])
+}
+
 model StaffRole {
   userId String        @db.Uuid
   role   StaffRoleName

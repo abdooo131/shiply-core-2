@@ -50,8 +50,28 @@ describe('team', () => {
     const merchant = await makeMerchant();
     const owner = await makeSessionUser({ merchantId: merchant.id, access: 'full' });
     const ops = await makeSessionUser({ merchantId: merchant.id, access: 'orders_pickups' });
-    expect((await listTeam(owner, merchant.id)).map((member) => member.access).sort()).toEqual(['full', 'orders_pickups']);
+    expect((await listTeam(owner, merchant.id)).members.map((member) => member.access).sort()).toEqual(['full', 'orders_pickups']);
     await expect(listTeam(ops, merchant.id)).rejects.toMatchObject({ code: 'forbidden' });
+  });
+
+  it('pages through a large team without repeats or gaps', async () => {
+    const merchant = await makeMerchant();
+    const owner = await makeSessionUser({ merchantId: merchant.id, access: 'full' });
+    for (let index = 0; index < 5; index += 1) await makeSessionUser({ merchantId: merchant.id, access: 'orders_pickups' });
+
+    const seen: string[] = [];
+    let after: string | undefined;
+    let pages = 0;
+    do {
+      const page = await listTeam(owner, merchant.id, { after, pageSize: 2 });
+      expect(page.members.length).toBeLessThanOrEqual(2);
+      seen.push(...page.members.map((member) => member.userId));
+      after = page.nextCursor ?? undefined;
+      pages += 1;
+    } while (after);
+
+    expect(pages).toBe(3);
+    expect(new Set(seen).size).toBe(6);
   });
 
   it('changes access and deactivates a member, ending their sessions', async () => {

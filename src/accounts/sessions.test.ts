@@ -45,6 +45,23 @@ describe('sessions', () => {
     expect(await getSessionUser(revoked.sessionToken)).toBeNull();
   });
 
+  it('clears out the user’s expired and signed-out sessions when they sign in', async () => {
+    await createTestUser();
+    const expired = await signIn('owner@example.test', TEST_PASSWORD, AGENT);
+    const revoked = await signIn('owner@example.test', TEST_PASSWORD, AGENT);
+    const live = await signIn('owner@example.test', TEST_PASSWORD, AGENT);
+    await db.session.update({
+      where: { tokenHash: createHash('sha256').update(expired.sessionToken).digest('hex') },
+      data: { expiresAt: new Date(Date.now() - 1000) },
+    });
+    await revokeSession(revoked.sessionToken);
+
+    const fresh = await signIn('owner@example.test', TEST_PASSWORD, AGENT);
+    expect(await db.session.count()).toBe(2);
+    expect(await getSessionUser(live.sessionToken)).not.toBeNull();
+    expect(await getSessionUser(fresh.sessionToken)).not.toBeNull();
+  });
+
   it('changing the password signs out every other session', async () => {
     const { user } = await createTestUser();
     const current = await signIn('owner@example.test', TEST_PASSWORD, AGENT);

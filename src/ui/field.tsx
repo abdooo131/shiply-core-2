@@ -4,8 +4,10 @@ export function Field({
   label,
   hint,
   error,
+  className,
   ...inputProps
 }: InputHTMLAttributes<HTMLInputElement> & { label: string; hint?: string; error?: string }) {
+  const inputClass = ['input', error && 'err', className].filter(Boolean).join(' ');
   const id = useId();
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
@@ -15,7 +17,7 @@ export function Field({
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
-        className={error ? 'input err' : 'input'}
+        className={inputClass}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         {...inputProps}

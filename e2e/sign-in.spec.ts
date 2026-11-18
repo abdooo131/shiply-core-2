@@ -42,8 +42,8 @@ test('language button switches to Arabic, right to left', async ({ page }) => {
 
 test('wrong password shows a translated error in both languages', async ({ page }) => {
   for (const [locale, message] of [
-    ['en', 'The email, mobile number or password is not correct.'],
-    ['ar', 'البريد الإلكتروني أو رقم الموبايل أو كلمة المرور غير صحيحة.'],
+    ['en', 'The email, mobile number or password is not correct. After 5 wrong tries, sign-in pauses for 15 minutes.'],
+    ['ar', 'البريد الإلكتروني أو رقم الموبايل أو كلمة المرور غير صحيحة. بعد 5 محاولات خاطئة، تسجيل الدخول بيتوقف 15 دقيقة.'],
   ] as const) {
     await page.goto(`/${locale}/login`);
     await page.getByTestId('identifier').fill(OWNER_EMAIL);

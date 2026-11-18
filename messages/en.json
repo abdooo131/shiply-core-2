@@ -44,10 +44,10 @@
     "submitting": "Signing in…",
     "tagline": "Next-day delivery across Egypt, with your cash on time.",
     "errors": {
-      "invalid_credentials": "The email, mobile number or password is not correct.",
-      "account_locked": "Too many wrong attempts. Try again in 15 minutes.",
+      "invalid_credentials": "The email, mobile number or password is not correct. After 5 wrong tries, sign-in pauses for 15 minutes.",
       "missing_fields": "Enter your email or mobile number and your password.",
-      "unexpected": "Something went wrong on our side. Please try again."
+      "unexpected": "Something went wrong on our side. Please try again.",
+      "too_many_attempts": "Too many sign-in attempts from this network. Try again in 15 minutes."
     }
   },
   "settings": {
@@ -148,6 +148,7 @@
       "weak_password": "Use at least 8 characters.",
       "not_found": "This member was not found.",
       "unexpected": "Something went wrong on our side. Please try again."
-    }
+    },
+    "showMore": "Show more"
   }
 }

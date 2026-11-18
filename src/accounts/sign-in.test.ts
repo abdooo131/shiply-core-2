@@ -42,7 +42,7 @@ describe('signIn', () => {
     for (let attempt = 0; attempt < 5; attempt += 1) {
       await expect(signIn('owner@example.test', 'nope', AGENT)).rejects.toMatchObject({ code: 'invalid_credentials' });
     }
-    await expect(signIn('owner@example.test', TEST_PASSWORD, AGENT)).rejects.toMatchObject({ code: 'account_locked' });
+    await expect(signIn('owner@example.test', TEST_PASSWORD, AGENT)).rejects.toMatchObject({ code: 'invalid_credentials' });
 
     await db.user.update({ where: { id: user.id }, data: { lockedUntil: new Date(Date.now() - 1000) } });
     const result = await signIn('owner@example.test', TEST_PASSWORD, AGENT);
@@ -53,7 +53,18 @@ describe('signIn', () => {
     await createTestUser();
     const attempts = Array.from({ length: 10 }, () => signIn('owner@example.test', 'nope', AGENT).catch(() => null));
     await Promise.all(attempts);
-    await expect(signIn('owner@example.test', TEST_PASSWORD, AGENT)).rejects.toMatchObject({ code: 'account_locked' });
+    await expect(signIn('owner@example.test', TEST_PASSWORD, AGENT)).rejects.toMatchObject({ code: 'invalid_credentials' });
+  });
+
+  it('gives a locked account the same answer as an unknown one, so a lock does not reveal the account exists', async () => {
+    await createTestUser();
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      await signIn('owner@example.test', 'nope', AGENT).catch(() => null);
+    }
+    const locked = await signIn('owner@example.test', 'nope', AGENT).catch((error: unknown) => error);
+    const unknown = await signIn('nobody@example.test', 'nope', AGENT).catch((error: unknown) => error);
+    expect(locked).toMatchObject({ code: 'invalid_credentials', status: 401 });
+    expect(unknown).toMatchObject({ code: 'invalid_credentials', status: 401 });
   });
 
   it('rejects a disabled account', async () => {

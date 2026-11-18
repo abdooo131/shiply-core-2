@@ -81,8 +81,8 @@ async function ProfileTab({ t, user }: { t: Translate; user: SessionUser }) {
   );
 }
 
-async function TeamTab({ t, user, merchantId }: { t: Translate; user: SessionUser; merchantId: string }) {
-  const team = await listTeam(user, merchantId);
+async function TeamTab({ t, user, merchantId, after }: { t: Translate; user: SessionUser; merchantId: string; after?: string }) {
+  const { members: team, nextCursor } = await listTeam(user, merchantId, { after });
   return (
     <>
       <section className="card" style={{ overflow: 'hidden' }}>
@@ -109,6 +109,13 @@ async function TeamTab({ t, user, merchantId }: { t: Translate; user: SessionUse
             </tbody>
           </table>
         </div>
+        {nextCursor ? (
+          <div className="card-b">
+            <Link className="btn sm" href={{ pathname: '/settings/team', query: { after: nextCursor } }}>
+              {t('showMore')}
+            </Link>
+          </div>
+        ) : null}
       </section>
       <Section title={t('inviteTitle')} hint={t('inviteHint')}>
         <InviteForm />
@@ -139,8 +146,17 @@ async function PayoutsTab({ t, user, merchantId }: { t: Translate; user: Session
   );
 }
 
-export default async function SettingsTabPage({ params }: { params: Promise<{ locale: string; tab: string }> }) {
+export default async function SettingsTabPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string; tab: string }>;
+  searchParams: Promise<{ after?: string | string[] }>;
+}) {
   const { locale, tab } = await params;
+  const { after: afterParam } = await searchParams;
+  // Only a single, well-formed id is accepted as a page cursor.
+  const after = typeof afterParam === 'string' && /^[0-9a-f-]{36}$/i.test(afterParam) ? afterParam : undefined;
   setRequestLocale(locale);
   if (!isSettingsTab(tab)) notFound();
 
@@ -163,7 +179,7 @@ export default async function SettingsTabPage({ params }: { params: Promise<{ lo
         </Section>
       );
     }
-    if (current === 'team') return <TeamTab t={t} user={user} merchantId={merchantId} />;
+    if (current === 'team') return <TeamTab t={t} user={user} merchantId={merchantId} after={after} />;
     return <PayoutsTab t={t} user={user} merchantId={merchantId} />;
   };
 
