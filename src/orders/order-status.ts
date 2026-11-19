@@ -83,10 +83,14 @@ function requireStatusChangeRight(actor: SessionUser, order: Order, to: OrderSta
   if (!MERCHANT_TRANSITIONS[order.status]?.includes(to)) throw new AppError('forbidden', 403);
 }
 
+// The moves the server will accept from this status, so a screen offers nothing it would refuse.
+export function nextStatusesFor(status: OrderStatus, attempts: number): OrderStatus[] {
+  const isOutOfAttempts = status === 'attempt_failed' && attempts >= MAX_DELIVERY_ATTEMPTS;
+  return ORDER_STATUS_TRANSITIONS[status].filter((to) => !(isOutOfAttempts && BLOCKED_AFTER_MAX_ATTEMPTS.has(to)));
+}
+
 function isAllowedTransition(order: Order, to: OrderStatus): boolean {
-  if (!ORDER_STATUS_TRANSITIONS[order.status].includes(to)) return false;
-  const isOutOfAttempts = order.status === 'attempt_failed' && order.attempts >= MAX_DELIVERY_ATTEMPTS;
-  return !(isOutOfAttempts && BLOCKED_AFTER_MAX_ATTEMPTS.has(to));
+  return nextStatusesFor(order.status, order.attempts).includes(to);
 }
 
 export async function changeOrderStatus(

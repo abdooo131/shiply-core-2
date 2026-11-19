@@ -449,6 +449,7 @@ model Order {
   @@index([merchantId, status, createdAt])
   @@index([merchantId, createdAt])
   @@index([merchantId, updatedAt])
+  @@index([status, updatedAt])
   @@index([merchantId, customerMobile])
   @@index([areaId])
   @@index([customerId])

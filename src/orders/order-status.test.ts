@@ -4,7 +4,7 @@ import { makeMerchant, makeSessionUser } from '@/merchants/merchants-test-fixtur
 import { seedPricingDefaults } from '@/pricing/pricing-test-fixtures';
 import { db } from '@/shared/db';
 import { resetTestDatabase } from '@/shared/test-db';
-import { addOrderNote, changeOrderStatus, getOrderTimeline, MAX_DELIVERY_ATTEMPTS, ORDER_STATUS_TRANSITIONS } from './order-status';
+import { addOrderNote, changeOrderStatus, getOrderTimeline, MAX_DELIVERY_ATTEMPTS, nextStatusesFor, ORDER_STATUS_TRANSITIONS } from './order-status';
 import { insertTestOrder } from './orders-test-fixtures';
 
 async function insertOrderWithStatus(merchantId: string, status: OrderStatus, attempts = 0) {
@@ -45,6 +45,13 @@ describe('order status changes', () => {
     expect(audits).toHaveLength(transitionCount);
     expect(JSON.stringify(audits)).not.toContain('Mona Ali');
     expect(JSON.stringify(audits)).not.toContain('+20100');
+  });
+
+  it('offers only the moves the server accepts, with none left to go out again after the last attempt', () => {
+    expect(nextStatusesFor('out_for_delivery', 0)).toEqual(['delivered', 'attempt_failed']);
+    expect(nextStatusesFor('attempt_failed', 1)).toEqual(ORDER_STATUS_TRANSITIONS.attempt_failed);
+    expect(nextStatusesFor('attempt_failed', MAX_DELIVERY_ATTEMPTS)).toEqual(['awaiting_merchant_action', 'returning']);
+    expect(nextStatusesFor('delivered', 1)).toEqual([]);
   });
 
   it('treats delivered, returned and canceled as final', () => {
