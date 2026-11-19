@@ -5,6 +5,7 @@ import { getHomeSummary, type HomeSummary } from '@/home/home-summary';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { getWalletSummary, listCashOuts } from '@/money';
+import { isFailureReason } from '@/orders/failure-reasons';
 import { MAX_DELIVERY_ATTEMPTS } from '@/orders/order-status';
 import { db } from '@/shared/db';
 import { formatPiasters } from '@/shared/money';
@@ -158,6 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const user = await requireUser(safeLocale);
   const merchantId = user.memberships[0]?.merchantId;
   const t = await getTranslations('home');
+  const tOrder = await getTranslations('orderPage');
 
   const now = new Date();
   const [merchant, summary, money] = await Promise.all([
@@ -197,7 +199,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             number: order.number,
             customerName: order.customerName,
             areaName: moneyLocale === 'ar' ? order.areaNameAr : order.areaNameEn,
-            reasonText: order.reason ?? t('needs.noReason'),
+            reasonText: isFailureReason(order.reason) ? tOrder(`timeline.reasons.${order.reason}`) : (order.reason ?? t('needs.noReason')),
             attemptText: t('needs.attempt', { attempt: Math.max(order.attempts, 1), max: MAX_DELIVERY_ATTEMPTS }),
           }))}
         />

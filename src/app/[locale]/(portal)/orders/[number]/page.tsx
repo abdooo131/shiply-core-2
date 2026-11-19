@@ -6,6 +6,7 @@ import { requireUser } from '@/accounts';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { MAX_DELIVERY_ATTEMPTS } from '@/orders';
+import { FAILURE_REASONS } from '@/orders/failure-reasons';
 import { merchantStatusOf } from '@/orders/merchant-status';
 import { getOrderDetail, type OrderDetail } from '@/orders/order-detail';
 import { AppError } from '@/shared/app-error';
@@ -39,7 +40,7 @@ const STAGE_OF: Record<OrderStatus, number> = {
   canceled: CANCELED_STAGE,
 };
 const COMING_BACK: ReadonlySet<OrderStatus> = new Set(['returning', 'returned']);
-const KNOWN_REASONS: ReadonlySet<string> = new Set(['merchant_canceled']);
+const KNOWN_REASONS: ReadonlySet<string> = new Set(['merchant_canceled', ...FAILURE_REASONS]);
 const CAIRO_TIME_ZONE = 'Africa/Cairo';
 
 // Short "Tue 17 Nov" like the mockup tracker, so four dates fit side by side on a phone.

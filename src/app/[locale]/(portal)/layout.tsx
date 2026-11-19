@@ -1,8 +1,10 @@
+import { redirect } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { requireUser } from '@/accounts';
 import { routing } from '@/i18n/routing';
 import { db } from '@/shared/db';
+import { isStaff } from '@/staff/staff-queues';
 import { Sidebar } from '@/ui/shell/sidebar';
 import { SupportChatButton } from '@/ui/shell/support-chat-button';
 import { TabBar } from '@/ui/shell/tab-bar';
@@ -21,6 +23,8 @@ export default async function PortalLayout({
   setRequestLocale(locale);
   const safeLocale = routing.locales.find((known) => known === locale) ?? routing.defaultLocale;
   const user = await requireUser(safeLocale);
+  // Shiply's own team without a merchant of their own work in the staff area.
+  if (user.memberships.length === 0 && isStaff(user)) redirect(`/${safeLocale}/staff`);
 
   const merchantId = user.memberships[0]?.merchantId;
   const merchant = merchantId
@@ -34,7 +38,7 @@ export default async function PortalLayout({
       <div className="app">
         <Sidebar />
         <div className="main">
-          <TopBar storeName={storeName} merchantNumber={merchantNumber} />
+          <TopBar storeName={storeName} merchantNumber={merchantNumber} showStaffLink={isStaff(user)} />
           <main className="page">{children}</main>
         </div>
       </div>

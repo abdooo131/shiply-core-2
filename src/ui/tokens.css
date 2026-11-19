@@ -188,7 +188,7 @@ a { color: var(--primary); text-decoration: none; }
 .thumb { width: 48px; height: 48px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); display: grid; place-items: center; color: var(--primary); flex: none; }
 .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12.5px; letter-spacing: -0.01em; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
 .opt .pill { flex: none; }
-.tbl-wrap { overflow: auto; }
+.tbl-wrap { overflow: auto; position: relative; } /* keeps visually hidden (absolute) cells inside the scroll box */
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-variant-numeric: tabular-nums; }
 th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); text-align: start; font-weight: 800; padding: 11px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
 td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; background: var(--surface); }
@@ -749,4 +749,17 @@ table.an-plain td { padding: 12px 14px; }
   .hm-x.hm-wide { display: none; }
   .hm-x.hm-narrow { display: inline; }
   .hstat b { font-size: 22px; }
+}
+
+/* ---------- staff area (internal stand-in) ---------- */
+.staff-tabs { display: none; }
+.staff-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.staff-pick { display: grid; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+.staff-pick label { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
+.staff-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.staff-thread { display: grid; gap: 10px; }
+.staff-msg { padding: 12px 14px; border-radius: 12px; background: var(--surface-2); }
+.staff-msg.from-staff { border-inline-start: 3px solid var(--primary); }
+@media (max-width: 860px) {
+  .staff-tabs { display: flex; padding: 0 16px; background: var(--surface); }
 }

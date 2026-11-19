@@ -14,8 +14,9 @@ function initialsOf(name: string): string {
     .join('');
 }
 
-export async function TopBar({ storeName, merchantNumber }: { storeName: string; merchantNumber: string }) {
+export async function TopBar({ storeName, merchantNumber, showStaffLink = false }: { storeName: string; merchantNumber: string; showStaffLink?: boolean }) {
   const t = await getTranslations('shell');
+  const tStaff = await getTranslations('staff');
   const locale = await getLocale();
   const signOut = signOutAction.bind(null, locale);
 
@@ -29,6 +30,11 @@ export async function TopBar({ storeName, merchantNumber }: { storeName: string;
         <input className="input" type="search" placeholder={t('searchPlaceholder')} aria-label={t('searchPlaceholder')} disabled />
       </div>
       <div className="grow" />
+      {showStaffLink ? (
+        <Link className="btn sm hide-sm" href="/staff" data-testid="open-staff-area">
+          {tStaff('openStaffArea')}
+        </Link>
+      ) : null}
       <Link className="btn lime hide-sm" href="/orders/new">
         <Icon name="plus" size={16} strokeWidth={2.4} />
         {t('createOrder')}

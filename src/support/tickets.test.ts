@@ -130,6 +130,15 @@ describe('support tickets', () => {
     expect(ticket.messages.map((message) => message.authorKind)).toEqual(['merchant', 'staff', 'merchant']);
   });
 
+  it('stores a staff reply once when the same reply is sent twice', async () => {
+    const { merchant, owner } = await merchantWithOwner();
+    const staff = await makeSessionUser({ staffRole: 'operations' });
+    const opened = await openTicket(owner, merchant.id, FIRST_MESSAGE, 'ticket-1');
+    await replyAsStaff(staff, opened.id, 'On it.', 'staff-reply-1');
+    await replyAsStaff(staff, opened.id, 'On it.', 'staff-reply-1');
+    expect(await db.supportMessage.count({ where: { ticketId: opened.id, authorKind: 'staff' } })).toBe(1);
+  });
+
   it('refuses a staff reply from someone without a support staff role', async () => {
     const { merchant, owner } = await merchantWithOwner();
     const opened = await openTicket(owner, merchant.id, FIRST_MESSAGE, 'ticket-1');

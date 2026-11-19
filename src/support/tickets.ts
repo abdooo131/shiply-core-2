@@ -234,9 +234,15 @@ export async function closeTicket(user: SessionUser, merchantId: string, ticketI
   });
 }
 
-export async function replyAsStaff(staffUser: SessionUser, ticketId: string, body: string): Promise<void> {
+// With a key, a resent reply (double click) is stored once.
+export async function replyAsStaff(staffUser: SessionUser, ticketId: string, body: string, idempotencyKey?: string): Promise<void> {
   requireSupportStaff(staffUser);
   const text = parseBody(body);
   if (!z.string().uuid().safeParse(ticketId).success) throw new AppError('not_found', 404);
-  await db.$transaction((tx) => addReply(tx, staffUser, ticketId, 'staff', text));
+  const work = (tx: Prisma.TransactionClient) => addReply(tx, staffUser, ticketId, 'staff', text);
+  if (idempotencyKey) {
+    await runOnce(idempotencyKey, `support.staff_reply:${ticketId}`, work);
+    return;
+  }
+  await db.$transaction(work);
 }
